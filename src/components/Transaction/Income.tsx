@@ -1,13 +1,13 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { FaList, FaPlus, FaSearch, FaThLarge } from 'react-icons/fa';
 import TransactionCard from './TransactionCard';
 import type { Transaction } from './Types';
-import { AnimatePresence, motion } from 'framer-motion';
 
 type ActionsModel = {
     status: boolean;
-    isDeleting: boolean
-}
+    isDeleting: boolean;
+};
 
 export default function Income() {
     const [view, setView] = useState<'grid' | 'list'>(
@@ -22,15 +22,18 @@ export default function Income() {
         localStorage.setItem('transactionView', newView);
     };
 
-    const isModifying = useRef<ActionsModel>({ status: false, isDeleting: false })
-    const cardIdRef = useRef<string>('')
+    const isModifying = useRef<ActionsModel>({
+        status: false,
+        isDeleting: false,
+    });
+    const cardIdRef = useRef<string>('');
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
-        isModifying.current = { status: false, isDeleting: false }
-        cardIdRef.current = ''
-        setIsModalOpen(false)
+        isModifying.current = { status: false, isDeleting: false };
+        cardIdRef.current = '';
+        setIsModalOpen(false);
     };
 
     const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -99,10 +102,10 @@ export default function Income() {
 
     const handleUpdateTransaction = (
         e: React.FormEvent<HTMLFormElement>,
-        incomeId: string
+        incomeId: string,
     ) => {
         e.preventDefault();
-        incomeId = cardIdRef.current
+        incomeId = cardIdRef.current;
         const form = e.currentTarget;
         const formData = new FormData(form);
         const name = formData.get('name') as string;
@@ -123,12 +126,13 @@ export default function Income() {
                     source,
                     description: name,
                 }),
-            }).then(() => fetchTransactions())
-                .catch(() => console.log("Error while updating"))
+            })
+                .then(() => fetchTransactions())
+                .catch(() => console.log('Error while updating'))
                 .finally(() => {
                     closeModal();
                     form.reset();
-                })
+                });
         } catch (error) {
             console.error('Failed to add income:', error);
         }
@@ -136,10 +140,10 @@ export default function Income() {
 
     const handleDeleteTransaction = (
         e: React.FormEvent<HTMLFormElement>,
-        incomeId: string
+        incomeId: string,
     ) => {
-        e.preventDefault()
-        incomeId = cardIdRef.current
+        e.preventDefault();
+        incomeId = cardIdRef.current;
         try {
             fetch('http://localhost:8080/api/income/' + incomeId, {
                 method: 'DELETE',
@@ -147,11 +151,12 @@ export default function Income() {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-            }).then(() => fetchTransactions())
-                .catch(() => console.log("Error while updating"))
+            })
+                .then(() => fetchTransactions())
+                .catch(() => console.log('Error while updating'))
                 .finally(() => {
                     closeModal();
-                })
+                });
         } catch (error) {
             console.error('Failed to add income:', error);
         }
@@ -198,10 +203,11 @@ export default function Income() {
                 <AnimatePresence>
                     <motion.div
                         layout
-                        className={`mt-6 w-full overflow-y-auto pt-3 pl-2 ${view === 'grid'
-                            ? 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
-                            : 'flex flex-col space-y-4'
-                            }`}
+                        className={`mt-6 w-full overflow-y-auto pt-3 pl-2 ${
+                            view === 'grid'
+                                ? 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
+                                : 'flex flex-col space-y-4'
+                        }`}
                         style={{ maxHeight: 'calc(100vh - 220px)' }}
                     >
                         <AnimatePresence>
@@ -212,22 +218,28 @@ export default function Income() {
                                     initial={{ scale: 0, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     exit={{ scale: 0.1, opacity: 0 }}
-                                    transition={{duration: 0.25}}
+                                    transition={{ duration: 0.25 }}
                                 >
                                     <TransactionCard
                                         transaction={t}
                                         view={view}
                                         actions={{
                                             onChange() {
-                                                isModifying.current = { status: true, isDeleting: false }
-                                                cardIdRef.current = t.id
-                                                openModal()
+                                                isModifying.current = {
+                                                    status: true,
+                                                    isDeleting: false,
+                                                };
+                                                cardIdRef.current = t.id;
+                                                openModal();
                                             },
                                             onDelete() {
-                                                isModifying.current = { status: true, isDeleting: true }
-                                                cardIdRef.current = t.id
-                                                openModal()
-                                            }
+                                                isModifying.current = {
+                                                    status: true,
+                                                    isDeleting: true,
+                                                };
+                                                cardIdRef.current = t.id;
+                                                openModal();
+                                            },
                                         }}
                                     />
                                 </motion.div>
@@ -241,39 +253,61 @@ export default function Income() {
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
                     <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
-                        <h2 className="text-2xl font-bold mb-3">{isModifying.current.status ? (isModifying.current.isDeleting ? 'Delete' : 'Update') : 'Add New'} Income</h2>
+                        <h2 className="mb-3 text-2xl font-bold">
+                            {isModifying.current.status
+                                ? isModifying.current.isDeleting
+                                    ? 'Delete'
+                                    : 'Update'
+                                : 'Add New'}{' '}
+                            Income
+                        </h2>
                         <form
-                            className="flex flex-col space-y-4"
-                            onSubmit={isModifying.current.status ? (isModifying.current.isDeleting ? handleDeleteTransaction : handleUpdateTransaction) : handleAddTransaction}
+                                className="flex flex-col space-y-4"
+                            onSubmit={(e) =>
+                                isModifying.current.status
+                                    ? isModifying.current.isDeleting
+                                        ? handleDeleteTransaction(
+                                              e,
+                                              cardIdRef.current,
+                                          )
+                                        : handleUpdateTransaction(
+                                              e,
+                                              cardIdRef.current,
+                                          )
+                                    : handleAddTransaction(e)
+                            }
                         >
-                            {!isModifying.current.isDeleting && (<><input
-                                name="name"
-                                type="text"
-                                placeholder="Name"
-                                className="rounded border p-2"
-                                required
-                            />
-                                <input
-                                    name="amount"
-                                    type="number"
-                                    placeholder="Amount"
-                                    className="rounded border p-2"
-                                    required
-                                />
-                                <input
-                                    name="date"
-                                    type="date"
-                                    className="rounded border p-2"
-                                    required
-                                />
-                                <input
-                                    name="source"
-                                    type="text"
-                                    placeholder="Source"
-                                    className="rounded border p-2"
-                                    required
-                                />
-                            </>)}
+                            {!isModifying.current.isDeleting && (
+                                <>
+                                    <input
+                                        name="name"
+                                        type="text"
+                                        placeholder="Name"
+                                        className="rounded border p-2"
+                                        required
+                                    />
+                                    <input
+                                        name="amount"
+                                        type="number"
+                                        placeholder="Amount"
+                                        className="rounded border p-2"
+                                        required
+                                    />
+                                    <input
+                                        name="date"
+                                        type="date"
+                                        className="rounded border p-2"
+                                        required
+                                    />
+                                    <input
+                                        name="source"
+                                        type="text"
+                                        placeholder="Source"
+                                        className="rounded border p-2"
+                                        required
+                                    />
+                                </>
+                            )}
                             <div className="flex justify-end space-x-2">
                                 <button
                                     type="button"
@@ -284,9 +318,19 @@ export default function Income() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className={"rounded " + (isModifying.current.isDeleting ? 'bg-neutral-950/90' : 'bg-emerald-600') + " px-4 py-2 text-white"}
+                                    className={
+                                        'rounded ' +
+                                        (isModifying.current.isDeleting
+                                            ? 'bg-neutral-950/90'
+                                            : 'bg-emerald-600') +
+                                        ' px-4 py-2 text-white'
+                                    }
                                 >
-                                    {isModifying.current.status ? (isModifying.current.isDeleting ? 'Delete' : 'Update') : 'Add'}
+                                    {isModifying.current.status
+                                        ? isModifying.current.isDeleting
+                                            ? 'Delete'
+                                            : 'Update'
+                                        : 'Add'}
                                 </button>
                             </div>
                         </form>

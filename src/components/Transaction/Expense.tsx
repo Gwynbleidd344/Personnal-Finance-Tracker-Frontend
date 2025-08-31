@@ -1,9 +1,10 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { FaList, FaPlus, FaSearch, FaThLarge } from 'react-icons/fa';
 import TransactionCard from './TransactionCard';
 import type { Transaction } from './Types';
 
-type Category = { id: string; name :string};
+type Category = { id: string; name: string };
 
 export default function Expense() {
     const [view, setView] = useState<'grid' | 'list'>(
@@ -27,7 +28,6 @@ export default function Expense() {
     const [categories, setCategories] = useState<Category[]>([]);
     const token = localStorage.getItem('accessToken');
 
-
     const fetchCategories = async (): Promise<Category[]> => {
         if (!token) return [];
         try {
@@ -44,7 +44,6 @@ export default function Expense() {
             return [];
         }
     };
-
 
     const fetchExpenses = async (_cats: Category[]) => {
         if (!token) return;
@@ -71,7 +70,6 @@ export default function Expense() {
         }
     };
 
-
     useEffect(() => {
         const fetchData = async () => {
             if (!token) return;
@@ -80,7 +78,6 @@ export default function Expense() {
         };
         fetchData();
     }, [token]);
-
 
     const handleAddTransaction = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -113,7 +110,6 @@ export default function Expense() {
             console.error(err);
         }
     };
-
 
     const handleUpdateTransaction = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -153,7 +149,6 @@ export default function Expense() {
         }
     };
 
-
     const handleChangeTransaction = (id: string) => {
         setEditingId(id);
         openModal();
@@ -177,7 +172,7 @@ export default function Expense() {
             <div className="flex min-h-full w-full max-w-7xl flex-col rounded-2xl p-6">
                 {/* Header */}
                 <div className="flex flex-col border-b border-gray-300 pb-2 text-3xl font-bold md:flex-row md:items-center md:justify-between">
-                    <h1 className="text-3xl font-bold">Expense Tracker</h1>
+                    <h1 className="text-3xl font-bold">Expense </h1>
 
                     <div className="flex flex-col items-start space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-4">
                         <button
@@ -208,37 +203,48 @@ export default function Expense() {
                     </div>
                 </div>
 
-                {/* Liste des transactions */}
-                <div
-                    className={`mt-6 w-full overflow-y-auto pt-3 pl-2 ${
-                        view === 'grid'
-                            ? 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
-                            : 'flex flex-col space-y-4'
-                    }`}
-                    style={{ maxHeight: 'calc(100vh - 220px)' }}
-                >
-                    {Array.isArray(transactions) &&
-                        transactions.map((t) => (
-                            <TransactionCard
+                <AnimatePresence>
+                    <motion.div
+                        layout
+                        className={`mt-6 w-full overflow-y-auto pt-3 pl-2 ${
+                            view === 'grid'
+                                ? 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'
+                                : 'flex flex-col space-y-4'
+                        }`}
+                        style={{ maxHeight: 'calc(100vh - 220px)' }}
+                    >
+                        {transactions.map((t) => (
+                            <motion.div
+                                layout
                                 key={t.id}
-                                transaction={t}
-                                view={view}
-                                actions={{
-                                    onChange: () =>
-                                        handleChangeTransaction(t.id),
-                                    onDelete: () =>
-                                        handleDeleteTransaction(t.id),
-                                }}
-                            />
+                                initial={{ scale: 0, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.1, opacity: 0 }}
+                                transition={{ duration: 0.25 }}
+                            >
+                                <TransactionCard
+                                    transaction={t}
+                                    view={view}
+                                    actions={{
+                                        onChange: () =>
+                                            handleChangeTransaction(t.id),
+                                        onDelete: () =>
+                                            handleDeleteTransaction(t.id),
+                                    }}
+                                />
+                            </motion.div>
                         ))}
-                </div>
+                    </motion.div>
+                </AnimatePresence>
             </div>
 
             {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
                     <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
-                        <h2 className="text-2xl font-bold">Add New Expense</h2>
+                        <h2 className="text-2xl font-bold">
+                            {editingId ? 'Update Expense' : 'Add New Expense'}
+                        </h2>
                         <form
                             className="flex flex-col space-y-4"
                             onSubmit={
@@ -270,7 +276,6 @@ export default function Expense() {
                                     .toISOString()
                                     .slice(0, 16)}
                             />
-
                             <select
                                 name="categoryId"
                                 className="rounded border p-2"
@@ -284,13 +289,11 @@ export default function Expense() {
                                         </option>
                                     ))}
                             </select>
-
                             <input
                                 name="receipt"
                                 type="file"
                                 className="rounded border p-2"
                             />
-
                             <div className="flex space-x-4">
                                 <label className="flex items-center space-x-2">
                                     <input
@@ -310,7 +313,6 @@ export default function Expense() {
                                     <span>Recurring</span>
                                 </label>
                             </div>
-
                             <div className="flex justify-end space-x-2">
                                 <button
                                     type="button"
@@ -323,7 +325,7 @@ export default function Expense() {
                                     type="submit"
                                     className="rounded bg-emerald-600 px-4 py-2 text-white"
                                 >
-                                    Add
+                                    {editingId ? 'Update' : 'Add'}
                                 </button>
                             </div>
                         </form>
