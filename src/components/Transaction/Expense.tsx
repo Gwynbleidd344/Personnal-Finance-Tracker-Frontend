@@ -3,7 +3,7 @@ import { FaList, FaPlus, FaSearch, FaThLarge } from 'react-icons/fa';
 import TransactionCard from './TransactionCard';
 import type { Transaction } from './Types';
 
-type Category = { id: string; name: string };
+type Category = { id: string; name :string};
 
 export default function Expense() {
     const [view, setView] = useState<'grid' | 'list'>(
@@ -27,7 +27,7 @@ export default function Expense() {
     const [categories, setCategories] = useState<Category[]>([]);
     const token = localStorage.getItem('accessToken');
 
-    
+
     const fetchCategories = async (): Promise<Category[]> => {
         if (!token) return [];
         try {
@@ -45,8 +45,8 @@ export default function Expense() {
         }
     };
 
-    
-    const fetchExpenses = async (cats: Category[]) => {
+
+    const fetchExpenses = async (_cats: Category[]) => {
         if (!token) return;
         try {
             const res = await fetch('http://localhost:8080/api/expenses', {
@@ -54,17 +54,15 @@ export default function Expense() {
             });
             const data = await res.json();
             const formatted: Transaction[] = Array.isArray(data)
-                ? data.map((item: any) => {
-                      return {
-                          id: item.id,
-                          name: item.description || item.name,
-                          amount: parseFloat(item.amount),
-                          date: item.date,
-                          type: 'expense',
-                          category: item.category_fk?.name || 'Uncategorized',
-                          source: item.source || '',
-                      };
-                  })
+                ? data.map((item: any) => ({
+                      id: item.id,
+                      name: item.description || item.name,
+                      amount: parseFloat(item.amount),
+                      date: item.date,
+                      type: 'expense',
+                      category: item.category_fk?.name || 'Uncategorized',
+                      source: item.source || '',
+                  }))
                 : [];
             setTransactions(formatted);
         } catch (err) {
@@ -73,20 +71,18 @@ export default function Expense() {
         }
     };
 
-    
+
     useEffect(() => {
         const fetchData = async () => {
             if (!token) return;
-            const cats = await fetchCategories();
-            await fetchExpenses(cats);
+            const _cats = await fetchCategories();
+            await fetchExpenses(_cats);
         };
         fetchData();
     }, [token]);
 
-    //  Add new transaction ---
-    const handleAddTransaction = async (
-        event: React.FormEvent<HTMLFormElement>,
-    ) => {
+
+    const handleAddTransaction = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const target = event.target as typeof event.target & {
             description: { value: string };
@@ -96,6 +92,8 @@ export default function Expense() {
             categoryId: { value: string };
         };
 
+        if (!token) return;
+
         const formData = new FormData();
         formData.append('description', target.description.value);
         formData.append('amount', target.amount.value);
@@ -103,15 +101,12 @@ export default function Expense() {
         formData.append('type', target.type.value);
         formData.append('categoryId', target.categoryId.value);
 
-        if (!token) return;
-
         try {
             await fetch('http://localhost:8080/api/expenses', {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
                 body: formData,
             });
-
             await fetchExpenses(categories);
             closeModal();
         } catch (err) {
@@ -119,11 +114,8 @@ export default function Expense() {
         }
     };
 
-    //  update transactions--
 
-    const handleUpdateTransaction = async (
-        event: React.FormEvent<HTMLFormElement>,
-    ) => {
+    const handleUpdateTransaction = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!editingId || !token) return;
 
@@ -153,7 +145,6 @@ export default function Expense() {
                 headers: { Authorization: `Bearer ${token}` },
                 body: formData,
             });
-
             await fetchExpenses(categories);
             closeModal();
             setEditingId(null);
@@ -161,9 +152,11 @@ export default function Expense() {
             console.error(err);
         }
     };
+
+
     const handleChangeTransaction = (id: string) => {
-        setEditingId(id); 
-        openModal(); 
+        setEditingId(id);
+        openModal();
     };
 
     const handleDeleteTransaction = async (id: string) => {
@@ -173,7 +166,7 @@ export default function Expense() {
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${token}` },
             });
-            await fetchExpenses(categories); 
+            await fetchExpenses(categories);
         } catch (err) {
             console.error(err);
         }
