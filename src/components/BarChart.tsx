@@ -107,7 +107,7 @@ export default function BarChart({ chartValueOptions }: any) {
                             if (!dateStr) return; // skip if no usable date
                             const date = new Date(dateStr);
 
-                            const key = date.toLocaleDateString('en-US', { year: "numeric", month: "short" });
+                            const key = date.toLocaleDateString(t('local_date_format', 'en-US'), { year: "numeric", month: "short" });
                             if (!totalPerMonth[key]) {
                                 totalPerMonth[key] = [0, 0]
                             }
