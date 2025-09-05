@@ -7,6 +7,7 @@ export type Transaction = {
   type: "income" | "expense";
   start_date?: string,
   end_date?: string,
+  receipt_id?: string,
   is_recurrent?: boolean
   category?: string;
   source?: string;

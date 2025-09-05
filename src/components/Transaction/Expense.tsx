@@ -7,6 +7,7 @@ import ExpenseFilter from '../UI/ExpenseFilter.tsx';
 import Input from './../UI/searchButton.tsx';
 import TransactionCard from './TransactionCard';
 import type { Category, Transaction } from './Types';
+import fileDownload from "js-file-download";
 
 type ChartOptions = {
   start: Date;
@@ -216,6 +217,18 @@ export default function Expense() {
     setIsModalOpen(true);
   };
 
+  const handleDownloadReceipt = async (id: string) => {
+    if (!token) return;
+    try {
+      return await fetch(`${import.meta.env.VITE_API_URL}/api/receipts/${id}`, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` },
+      }).then(async res => (res.ok) ? fileDownload(await res.blob(), `${id}.${res.headers.get('content-type')?.split('/')[1]}`) : null);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleDeleteTransaction = async (id: string) => {
     if (!token) return;
     try {
@@ -282,11 +295,15 @@ export default function Expense() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.1, opacity: 0 }}
                 transition={{ duration: 0.25 }}
+                className='relative'
               >
                 <TransactionCard
                   transaction={t}
                   view={view}
                   actions={{
+                    onDownload() {
+                      handleDownloadReceipt(t.id)
+                    },
                     onChange: () => handleChangeTransaction(t.id),
                     onDelete: () => {
                       setIsConfirmModalOpen(true)
@@ -294,6 +311,7 @@ export default function Expense() {
                     },
                   }}
                 />
+
               </motion.div>
             ))}
           </motion.div>

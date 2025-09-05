@@ -3,6 +3,7 @@ import {
   FaBolt,
   FaCoffee,
   FaExchangeAlt,
+  FaFileDownload,
   FaFilm,
   FaMoneyBillWave,
   FaPlus,
@@ -19,6 +20,7 @@ type TransactionCardProps = {
   transaction: Transaction;
   view: "grid" | "list";
   actions?: {
+    onDownload?: () => void;
     onChange?: () => void;
     onDelete?: () => void;
   };
@@ -50,14 +52,14 @@ export default function TransactionCard({
 }: TransactionCardProps) {
   const { t } = useTranslation()
   const { currency } = useContext(CurrencyContext);
-  const formattedDate = new Date(transaction.date).toLocaleDateString(t("local_date_format","en-US"), {
+  const formattedDate = new Date(transaction.date).toLocaleDateString(t("local_date_format", "en-US"), {
     day: "2-digit",
     month: "short",
     year: "numeric",
   });
 
   const formattedEndDate = transaction.end_date ?
-    new Date(transaction.end_date).toLocaleDateString(t("local_date_format","en-US"),
+    new Date(transaction.end_date).toLocaleDateString(t("local_date_format", "en-US"),
       {
         day: "2-digit"
         , month: "short",
@@ -78,8 +80,7 @@ export default function TransactionCard({
 
   return (
     <div
-      className={`group relative scale-99  rounded-xl cursor-pointer border border-gray-300 bg-gray-100 p-4 shadow-sm transition-transform duration-200 hover:scale-100 hover:shadow-md ${
-        view === "list" ? "h-24" : "h-auto"
+      className={`group relative scale-99  rounded-xl cursor-pointer border border-gray-300 bg-gray-100 p-4 shadow-sm transition-transform duration-200 hover:scale-100 hover:shadow-md ${view === "list" ? "h-24" : "h-auto"
         }`}
     >
       {/* Badge icon */}
@@ -96,8 +97,7 @@ export default function TransactionCard({
           <div className="flex items-center justify-between mt-5 space-x-4 w-fit">
             <h2 className="text-lg font-semibold text-gray-800">{transaction.name}</h2>
             <p
-              className={`text-lg font-bold ${
-                transaction.type === "expense" ? "text-red-600" : "text-green-600"
+              className={`text-lg font-bold ${transaction.type === "expense" ? "text-red-600" : "text-green-600"
                 }`}
             >
               {transaction.type === "expense" ? "-" : "+"}{formatCurrency(transaction.amount, currency)}
@@ -121,26 +121,33 @@ export default function TransactionCard({
         </div>
 
         {/* Action buttons */}
-        <div
-          className={`flex ${
-            view === "grid" ? "flex-col space-y-2" : "flex-row space-x-3"
-            } items-center`}
-        >
-          <button
-            className={`flex items-center justify-center gap-2 rounded bg-gray-300 text-gray-800 p-2 transition hover:bg-gray-400 active:scale-95`}
-            onClick={actions?.onChange}
-          >
-            <FaExchangeAlt />
-          </button>
+        <div className="flex justify-center items-start gap-2">
+          {transaction.receipt_id && (<button
+            onClick={actions?.onDownload}
+            className='flex items-center justify-center p-2 text-white bg-blue-500 rounded transition hover:bg-blue-600 active:scale-95'>
 
-          <button
-            className={`flex items-center justify-center gap-2 rounded bg-red-600 text-white p-2 transition hover:bg-red-700 active:scale-95`}
-            onClick={actions?.onDelete}
+            <FaFileDownload />
+          </button>)}
+          <div
+            className={`flex ${view === "grid" ? "flex-col space-y-2" : "flex-row space-x-3"
+              } items-center`}
           >
-            <FaTrash />
-          </button>
+            <button
+              className={`flex items-center justify-center gap-2 rounded bg-gray-300 text-gray-800 p-2 transition hover:bg-gray-400 active:scale-95`}
+              onClick={actions?.onChange}
+            >
+              <FaExchangeAlt />
+            </button>
+
+            <button
+              className={`flex items-center justify-center gap-2 rounded bg-red-600 text-white p-2 transition hover:bg-red-700 active:scale-95`}
+              onClick={actions?.onDelete}
+            >
+              <FaTrash />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
