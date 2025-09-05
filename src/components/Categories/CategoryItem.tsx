@@ -16,7 +16,7 @@ type Props = {
 export default function CategoryItem({ category, onRename, onDelete }: Props) {
     const { t } = useTranslation();
 
-    const formattedDate = new Date(category["created_at"]?.valueOf()).toLocaleDateString("en-FR", {
+    const formattedDate = new Date(category["created_at"]?.valueOf()).toLocaleDateString(t("local_date_format", "en-US"), {
         day: "2-digit",
         month: "short",
         year: "numeric",

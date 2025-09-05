@@ -5,14 +5,12 @@ type InputProps = {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  searchLabel?: string;
 };
 
 const Input: React.FC<InputProps> = ({
   value,
   onChange,
   placeholder = "Search...",
-  searchLabel = "Search",
 }) => {
   return (
     <div className="relative flex items-center w-full md:w-64">

@@ -98,10 +98,16 @@
     "currency_settings_title": "Currency",
     "delete_data_title": "Data Managing",
     "delete_data_description": "Deleting your data is not reversible.",
-    "confirm_delete": "Remove all data"
-    ,
+    "confirm_delete": "Remove all data",
     "delete_confirm_message": "Are you sure you want to delete all your data?",
     "delete_success": "All your data has been deleted.",
     "delete_error": "Something went wrong. Please try again.",
-    "ok": "OK"
+    "ok": "OK",
+    "general_account_informations": "General account informations",
+    "join_date": "Join Date",
+    "local_date_format": "en-US",
+    "account_delete_success": "Account deleted. You will be logged out.",
+    "account_delete_confirm_message": "Are you really sure to permanently delete your account ? All data will be unrecoverable",
+    "account_confirm_delete": "Permanently delete account",
+    "expense_confirm_delete": "Are you sure to delete this expense ?"
 }

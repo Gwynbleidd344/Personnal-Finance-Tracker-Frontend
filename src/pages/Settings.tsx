@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ChangePasswordForm from '../components/Settings/ChangePasswordForm';
 import ChangeUsernameForm from '../components/Settings/ChangeUsernameForm';
@@ -7,6 +7,7 @@ import ThemeToggle from '../components/UI/ThemeToggle';
 
 import CurrencySettings from '../components/Settings/CurrencySettings';
 import DeleteData from "../components/Settings/DeleteData.tsx";
+import DeleteAccount from '../components/Settings/DeleteAccount.tsx';
 
 export default function Settings() {
     const [isChangePasswordOpen, setIsChangePasswordOpen] =
@@ -15,12 +16,29 @@ export default function Settings() {
         useState<boolean>(false);
 
     const { t } = useTranslation();
+    const [userSummary, setUserSummary] = useState<{ email: string, createdAt: string }>({ createdAt: '', email: '' })
+
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_URL}/api/user/profile`, { headers: { "Authorization": "Bearer " + localStorage.getItem("accessToken") } }).then(async res => setUserSummary(await res.json())).catch(rej => console.log(rej.message))
+    }, [])
 
     return (
         <div className="mx-auto h-[94vh] overflow-y-scroll rounded-lg bg-gray-100 p-8 shadow-md">
             <h1 className="mb-6 border-b border-gray-300 pb-4 text-3xl font-bold text-gray-800">
                 {t('settings_title', 'Settings')}
             </h1>
+
+            <div className='pb-2'>
+                <h2 className="mb-2 text-xl font-semibold text-gray-900">
+                    {t('general_account_informations', "General account informations")}
+                </h2>
+                <div className='my-1 bg-gray-50 w-fit min-w-[300px] p-2 px-4 rounded-lg border border-gray-200 flex items-center gap-3'>
+                    <h4 className='font-medium text-gray-800 text-[16px]'>Email:</h4><p className='text-gray-600'>{userSummary.email}</p>
+                </div>
+                <div className='my-1 bg-gray-50 w-fit min-w-[300px] p-2 px-4 rounded-lg border border-gray-200 flex items-center gap-3'>
+                    <h4 className='font-medium text-gray-800 text-[16px]'>{t("join_date", "Join Date")}:</h4><p className='text-gray-600'>{new Date(userSummary.createdAt).toLocaleDateString(t("local_date_format","en-US"), { year: "numeric", month: "short", day: "2-digit" })}</p>
+                </div>
+            </div>
 
             <div>
                 <h2 className="mb-2 text-xl font-semibold text-gray-900">
@@ -125,13 +143,14 @@ export default function Settings() {
             <h2 className="font-semibold text-xl text-gray-900 mt-6 mb-2">
                 {t("delete_data_title", "Data Managing")}
             </h2>
-            <p className="text-gray-500 ml-1">
+            <p className="text-gray-600 ml-1">
                 {t(
                     "delete_data_description",
                     "Deleting your data is not reversible."
                 )}
             </p>
             <DeleteData />
+            <DeleteAccount />
         </div>
     );
 }

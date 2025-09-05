@@ -7,6 +7,7 @@ import ExpenseFilter from '../UI/ExpenseFilter.tsx';
 import Input from './../UI/searchButton.tsx';
 import TransactionCard from './TransactionCard';
 import type { Category, Transaction } from './Types';
+import fileDownload from "js-file-download";
 
 type ChartOptions = {
   start: Date;
@@ -30,6 +31,7 @@ export default function Expense() {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeValue, setTypeValue] = useState<'one-time' | 'recurring'>('one-time');
@@ -123,25 +125,29 @@ export default function Expense() {
       formData.append('receipt', target.receipt.files[0]);
     }
 
-    if (
-      target.receipt?.files?.[0] &&
-      target.receipt?.files?.length < 2 &&
-      ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'].includes(target.receipt.files[0].type) &&
-      target.receipt.files[0].size <= 2097152
-    ) {
-      formData.append('receipt', target.receipt.files[0]);
-    }
-
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/expenses`, {
+      // Debug: log token and FormData entries so we can compare with Postman
+      console.log('Creating expense - token present?', !!token);
+      for (const entry of formData.entries()) {
+        console.log('formData entry:', entry[0], entry[1]);
+      }
+
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
-      await fetchExpenses(token, setTransactions, t);
-      setIsModalOpen(false);
+
+      if (!res.ok) {
+        // Read server error body to surface useful debugging info
+        const text = await res.text();
+        console.error('Create expense failed', res.status, text);
+      } else {
+        await fetchExpenses(token, setTransactions, t);
+        setIsModalOpen(false);
+      }
     } catch (err) {
-      console.error(err);
+      console.error('Create expense exception', err);
     }
   };
 
@@ -181,32 +187,46 @@ export default function Expense() {
       formData.append('receipt', target.receipt.files[0]);
     }
 
-    if (
-      target.receipt?.files?.[0] &&
-      target.receipt?.files?.length < 2 &&
-      ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'].includes(target.receipt.files[0].type) &&
-      target.receipt.files[0].size <= 2097152
-    ) {
-      formData.append('receipt', target.receipt.files[0]);
-    }
-
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/${editingId}`, {
+      console.log('Updating expense', editingId, 'token present?', !!token);
+      for (const entry of formData.entries()) {
+        console.log('formData entry:', entry[0], entry[1]);
+      }
+
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/${editingId}`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
-      await fetchExpenses(token, setTransactions, t);
-      setIsModalOpen(false);
-      setEditingId(null);
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error('Update expense failed', res.status, text);
+      } else {
+        await fetchExpenses(token, setTransactions, t);
+        setIsModalOpen(false);
+        setEditingId(null);
+      }
     } catch (err) {
-      console.error(err);
+      console.error('Update expense exception', err);
     }
   };
 
   const handleChangeTransaction = (id: string) => {
     setEditingId(id);
     setIsModalOpen(true);
+  };
+
+  const handleDownloadReceipt = async (id: string) => {
+    if (!token) return;
+    try {
+      return await fetch(`${import.meta.env.VITE_API_URL}/api/receipts/${id}`, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` },
+      }).then(async res => (res.ok) ? fileDownload(await res.blob(), `${id}.${res.headers.get('content-type')?.split('/')[1]}`) : null);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleDeleteTransaction = async (id: string) => {
@@ -275,15 +295,23 @@ export default function Expense() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.1, opacity: 0 }}
                 transition={{ duration: 0.25 }}
+                className='relative'
               >
                 <TransactionCard
                   transaction={t}
                   view={view}
                   actions={{
+                    onDownload() {
+                      handleDownloadReceipt(t.id)
+                    },
                     onChange: () => handleChangeTransaction(t.id),
-                    onDelete: () => handleDeleteTransaction(t.id),
+                    onDelete: () => {
+                      setIsConfirmModalOpen(true)
+                      setEditingId(t.id)
+                    },
                   }}
                 />
+
               </motion.div>
             ))}
           </motion.div>
@@ -406,6 +434,44 @@ export default function Expense() {
                   </button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )
+        }
+      </AnimatePresence >
+      <AnimatePresence>
+        {isConfirmModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              exit={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: .15 }}
+              className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
+              <h2 className="text-2xl font-bold mb-3">
+                {t("expense_confirm_delete", "Are you sure to delete this expense ?")}
+              </h2>
+              <div className='flex justify-end gap-2'>
+                <button
+                  type="button"
+                  onClick={() => setIsConfirmModalOpen(false)}
+                  className="rounded-lg bg-gray-200 px-5 py-2 text-gray-800 font-medium hover:bg-gray-300 transition"
+                >
+                  {t('cancel', 'Cancel')}
+                </button>
+                <button
+                  type="button"
+                  className={`rounded-lg px-5 py-2 font-medium text-white transition bg-red-700 hover:bg-red-800'
+                  }`}
+                  onClick={() => {
+                    setIsConfirmModalOpen(false)
+                    handleDeleteTransaction(editingId);
+                    setEditingId(null)
+                  }}
+                >
+                  {t('delete', 'Delete')}
+                </button>
+              </div>
             </motion.div>
           </div>
         )

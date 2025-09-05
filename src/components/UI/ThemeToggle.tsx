@@ -11,7 +11,7 @@ export default function ThemeToggle() {
       <h2 className="font-semibold text-xl mt-6 text-black mb-2">
         Change Theme
       </h2>
-      <p className="text-gray-600 dark:text-gray-400 mb-6">
+      <p className="text-gray-600 dark:text-gray-600 mb-6">
         Choose the theme you prefer between Light and Dark mode.
       </p>
 

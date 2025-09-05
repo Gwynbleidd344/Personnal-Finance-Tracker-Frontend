@@ -3,10 +3,11 @@ export type Transaction = {
   name: string;
   amount: number;
   date: string;
-  income_date: string;
+  income_date?: string;
   type: "income" | "expense";
   start_date?: string,
   end_date?: string,
+  receipt_id?: string,
   is_recurrent?: boolean
   category?: string;
   source?: string;

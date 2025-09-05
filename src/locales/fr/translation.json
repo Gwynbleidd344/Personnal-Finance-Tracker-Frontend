@@ -97,10 +97,16 @@
     "currency_settings_title": "Devise",
     "delete_data_title": "Gérer les données",
     "delete_data_description": "Effacer vos données est irréversible.",
-    "confirm_delete": "Supprimer tout vos données"
-    ,
+    "confirm_delete": "Supprimer tout vos données",
     "delete_confirm_message": "Êtes-vous sûr de vouloir supprimer toutes vos données ?",
     "delete_success": "Toutes vos données ont été supprimées.",
     "delete_error": "Une erreur est survenue. Veuillez réessayer.",
-    "ok": "OK"
+    "ok": "OK",
+    "account_delete_success": "Compte supprimé. Vous serez déconnecter.",
+    "account_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer votre compte ? Les données seront irrecuperables",
+    "account_confirm_delete": "Supprimer votre compte",
+    "expense_confirm_delete": "Êtes-vous sûr de supprimer cette dépense ?",
+    "general_account_informations": "Informations génerales du compte",
+    "join_date": "Date de création",
+    "local_date_format": "fr-FR"
 }

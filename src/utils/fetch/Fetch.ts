@@ -45,6 +45,7 @@ export const fetchExpenses = async (
           start_date: item.start_date,
           end_date: item.end_date,
           is_recurrent: item.is_recurrent,
+          receipt_id: item.receipt_id,
           type: item.is_income ? 'income' : 'expense',
           category:
             item.category_fk?.name || t('uncategorized', 'Uncategorized'),

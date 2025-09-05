@@ -2,10 +2,14 @@ import { createContext, useState } from 'react';
 
 export const CurrencyContext = createContext({
     currency: 'EUR',
-    setCurrency: (currency: string) => {},
+    setCurrency: (_: string) => {},
 });
 
-export const CurrencyProvider = ({ children }) => {
+type Props = {
+    children: React.ReactNode;
+};
+
+export const CurrencyProvider = ({ children }: Props) => {
     const [currency, setCurrency] = useState('EUR');
 
     return (
