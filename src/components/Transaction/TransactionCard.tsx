@@ -109,11 +109,10 @@ export default function TransactionCard({
               {transaction.name}
             </h2>
             <p
-              className={`text-lg font-bold ${
-                transaction.type === "expense"
-                  ? "text-red-600"
-                  : "text-green-600"
-              }`}
+              className={`text-lg font-bold ${transaction.type === "expense"
+                ? "text-red-600"
+                : "text-green-600"
+                }`}
             >
               {transaction.type === "expense" ? "-" : "+"}
               {formatCurrency(transaction.amount, currency)}
@@ -154,7 +153,7 @@ export default function TransactionCard({
           </button>)}
           <div
             className={`flex ${view === "grid" ? "flex-col space-y-2" : "flex-row space-x-3"
-            } items-center`}
+              } items-center`}
           >
             <button
               className={`flex items-center justify-center gap-2 rounded 
