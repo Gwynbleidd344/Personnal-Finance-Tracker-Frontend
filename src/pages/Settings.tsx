@@ -138,6 +138,7 @@ export default function Settings() {
             </div>
             <LanguageToggle />
             <ThemeToggle />
+
             <CurrencySettings />
             <h2 className="font-semibold text-xl text-gray-900 mt-6 mb-2">
                 {t("delete_data_title", "Data Managing")}

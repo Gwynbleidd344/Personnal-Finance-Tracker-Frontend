@@ -7,3 +7,5 @@
 body {
     overflow-y: hidden;
 }
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant special (&:where(.special, .special *));

@@ -1,20 +1,8 @@
-import { useState, useEffect } from "react";
 import { FaSun, FaMoon } from "react-icons/fa";
+import useDarkMode from "../../hooks/useDarkMode";
 
 export default function ThemeToggle() {
-  const [darkMode, setDarkMode] = useState<boolean>(
-    localStorage.getItem("theme") === "dark"
-  );
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [darkMode]);
+  const [darkMode, setDarkMode] = useDarkMode();
 
   const toggleTheme = () => setDarkMode(!darkMode);
 
@@ -43,11 +31,7 @@ export default function ThemeToggle() {
             className={`absolute top-[7px] left-[10px] w-[25px] h-[25px] flex items-center justify-center rounded-full transition-transform duration-300
               ${darkMode ? "" : "translate-x-[45px]"}`}
           >
-            {darkMode ? (
-              <FaMoon className="text-white text-xl" />
-            ) : (
-              <FaSun className="text-black text-xl" />
-            )}
+            {darkMode ? <FaMoon className="text-white text-xl" /> : <FaSun className="text-black text-xl" />}
           </span>
         </label>
       </div>
