@@ -38,7 +38,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 };
 
 const categoryColors: Record<string, string> = {
-    Food: 'bg-red-700',
+    Food: 'bg-red-800',
     Entertainment: 'bg-purple-700',
     Transport: 'bg-green-700',
     Utilities: 'bg-yellow-700',
@@ -90,11 +90,11 @@ export default function TransactionCard({
 
     return (
         <div
-            className={`group relative mb-2 scale-99 cursor-pointer rounded-xl border border-gray-200/60 bg-gray-100 px-4 py-5 shadow-sm backdrop-blur-sm transition-transform duration-200 before:absolute before:inset-0 before:rounded-xl before:bg-gradient-to-br before:from-white/5 before:to-transparent before:opacity-0 before:transition-opacity before:duration-300 hover:scale-100 hover:shadow-md hover:before:opacity-100 dark:border-gray-700/80 dark:bg-gray-900 dark:shadow-emerald-950 ${view === 'list' ? 'h-24' : 'h-auto'}`}
+            className={`group relative mb-2 scale-99 cursor-pointer rounded-xl border border-gray-600/60 bg-gray-100 px-4 py-3 shadow-sm backdrop-blur-sm transition-transform duration-200 before:absolute before:inset-0 before:rounded-xl before:bg-gradient-to-br before:from-white/5 before:to-transparent before:opacity-0 before:transition-opacity before:duration-300 hover:scale-100 hover:shadow-md hover:before:opacity-100 dark:bg-gray-900  ${view === 'list' ? 'h-24' : 'h-auto'}`}
         >
             {/* Badge icon */}
             <div
-                className={`absolute -top-3 left-3 flex h-10 w-10 items-center justify-center rounded-lg ${bgColor} shadow`}
+                className={`absolute -top-3 left-3 flex h-10 w-10 items-center justify-center rounded-xl ${bgColor} shadow`}
             >
                 {icon}
             </div>
@@ -105,18 +105,18 @@ export default function TransactionCard({
                     className={
                         view === 'list'
                             ? 'ml-12 flex flex-col justify-between'
-                            : ''
+                            : 'flex flex-col space-y-2'
                     }
                 >
                     {/* Name & Amount */}
-                    <div className="mt-5 flex w-fit items-center justify-between space-x-4">
-                        <h2 className="mb-1 truncate text-xl leading-tight font-semibold text-gray-900 dark:text-gray-100">
+                    <div className="mt-6 flex w-fit items-center justify-between space-x-4 capitalize">
+                        <h2 className="mb-1 truncate pl-1.5 text-xl leading-tight font-semibold text-gray-900 dark:text-gray-100">
                             {formatName(transaction.name)}
                         </h2>
                         <p
                             className={`text-2xl font-bold tracking-tight ${
                                 transaction.type === 'expense'
-                                    ? 'text-red-600 dark:text-red-500/70'
+                                    ? 'text-red-600 dark:text-red-500/75'
                                     : 'text-emerald-600 dark:text-emerald-400'
                             }`}
                         >
@@ -129,15 +129,15 @@ export default function TransactionCard({
                     </div>
 
                     {/* Category / Source & Date */}
-                    <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
-                        <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1.5 font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                    <div className="text-md mt-1 flex flex-wrap items-center gap-4 text-gray-500 dark:text-gray-400">
+                        <span className="rounded-full bg-gray-100 px-3 py-1.5 font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
                             {formatName(
                                 transaction.type === 'expense'
                                     ? transaction.category || 'Uncategorized'
                                     : transaction.source || 'Unknown',
                             )}
                         </span>
-                        <span className="font-medium text-gray-400 dark:text-gray-500">
+                        <span className="font-medium text-gray-500 dark:text-gray-400">
                             {formattedDate}
                         </span>
                         {transaction.start_date && (
@@ -154,34 +154,30 @@ export default function TransactionCard({
                 </div>
 
                 {/* Action buttons */}
-                <div className="flex items-start justify-center gap-2">
+                <div className="ml-4 flex min-h-full mt-2">
                     {transaction.receipt_id && (
                         <button
                             onClick={actions?.onDownload}
-                            className="flex items-center justify-center rounded bg-blue-500 p-2 text-white transition hover:bg-blue-600 active:scale-95"
+                            className="group/btn flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-blue-700 hover:shadow-lg active:scale-95"
                         >
-                            <FaFileDownload />
+                            <FaFileDownload className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
                         </button>
                     )}
-                    <div
-                        className={`flex ${
-                            view === 'grid'
-                                ? 'flex-col space-y-2'
-                                : 'flex-row space-x-3'
-                        } items-center`}
-                    >
+
+                <div className="flex flex-col items-center justify-center h-full gap-2">
+
                         <button
-                            className={`flex items-center justify-center gap-2 rounded bg-gray-300 p-2 text-gray-800 transition hover:bg-gray-400 active:scale-95 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500`}
+                            className="group/btn flex h-10 w-10 items-center justify-center rounded-xl bg-gray-200 text-gray-700 shadow-md transition-all duration-200 hover:scale-105 hover:bg-gray-300 hover:shadow-lg active:scale-95 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                             onClick={actions?.onChange}
                         >
-                            <FaExchangeAlt />
+                            <FaExchangeAlt className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
                         </button>
 
                         <button
-                            className={`flex items-center justify-center gap-2 rounded bg-red-600 p-2 text-white transition hover:bg-red-700 active:scale-95`}
+                            className="group/btn flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/80 text-gray-100 shadow-md transition-all duration-200 hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95"
                             onClick={actions?.onDelete}
                         >
-                            <FaTrash />
+                            <FaTrash className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
                         </button>
                     </div>
                 </div>
