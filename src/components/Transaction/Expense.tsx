@@ -274,10 +274,10 @@ export default function Expense() {
     };
 
     return (
-        <div className="z-50 flex h-[96vh] w-full flex-col dark:border-2 dark:border-gray-800 items-center rounded-lg bg-gray-100 dark:bg-gray-900">
-            <div className="flex min-h-full w-full max-w-7xl flex-col rounded-2xl p-6">
+        <div className="z-50 flex h-[96vh] w-full flex-col items-center rounded-lg bg-gray-100 dark:border-2 dark:border-gray-800 dark:bg-gray-900  ">
+            <div className="flex min-h-full w-full flex-col rounded-2xl">
                 {/* Header */}
-                <div className="flex flex-col border-b border-gray-300 pb-2 text-3xl font-bold md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-col border-b border-gray-300 pb-2 text-3xl font-bold md:flex-row md:items-center md:justify-between p-5">
                     <h1 className="text-3xl font-bold dark:text-gray-100">
                         {t('expenses', 'Expenses')}
                     </h1>
@@ -311,20 +311,21 @@ export default function Expense() {
                         </div>
                     </div>
                 </div>
-
-                <ExpenseFilter
-                    chartOptions={chartOptions}
-                    setChartOptions={setChartOptions}
-                    categoryList={categoryList}
-                />
+                <div className="p-4">
+                    <ExpenseFilter
+                        chartOptions={chartOptions}
+                        setChartOptions={setChartOptions}
+                        categoryList={categoryList}
+                    />
+                </div>
 
                 {/* Transactions */}
                 <AnimatePresence>
                     <motion.div
                         layout
-                        className={`mt-2 w-full overflow-y-auto pt-3 pl-2 ${
+                        className={`mt-2 min-w-full overflow-y-auto pt-3 p-4 ${
                             view === 'grid'
-                                ? 'grid grid-cols-1 gap-4 pb-4 sm:grid-cols-2 lg:grid-cols-3'
+                                ? 'grid grid-cols-1 gap-3 pb-10 sm:grid-cols-2 lg:grid-cols-3'
                                 : 'flex flex-col space-y-4'
                         }`}
                         style={{ maxHeight: 'calc(100vh - 220px)' }}
