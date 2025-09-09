@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FaList, FaPlus, FaThLarge } from 'react-icons/fa';
 import TransactionCard from './TransactionCard';
 import type { Transaction } from './Types';
+import Input from './searchButton';
 
 type ActionsModel = {
     status: boolean;
@@ -200,16 +201,13 @@ export default function Income() {
 
                             {/* Search */}
                             <div className="relative flex items-center">
-                                <input
-                                    type="text"
+                                <Input
                                     value={searchTerm}
-                                    onChange={(e) =>
-                                        setSearchTerm(e.target.value)
-                                    }
+                                    onChange={setSearchTerm}
                                     placeholder={t('search', 'Search')}
-                                    className="h-12 w-full rounded-lg bg-gray-200 px-4 text-lg text-gray-800 placeholder-gray-500 transition focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                                 />
                             </div>
+                            
 
                             {/* View toggle */}
                             <div className="flex space-x-2">

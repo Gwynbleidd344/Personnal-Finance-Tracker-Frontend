@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { FaList, FaPlus, FaThLarge } from 'react-icons/fa';
 import { fetchCategories, fetchExpenses } from '../../utils/fetch/Fetch.ts';
 import ExpenseFilter from '../UI/ExpenseFilter.tsx';
-import Input from './../UI/searchButton.tsx';
+import Input from './searchButton.tsx';
 import TransactionCard from './TransactionCard';
 import type { Category, Transaction } from './Types';
 
