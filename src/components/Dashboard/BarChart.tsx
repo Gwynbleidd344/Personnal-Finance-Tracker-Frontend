@@ -6,6 +6,7 @@ import type { Transaction } from "../Transaction/Types";
 import { CurrencyContext } from "../../context/CurrencyContext";
 import { formatCurrency } from "../../utils/currency";
 import useDarkMode from "../../hooks/useDarkMode";
+import { getAccessToken } from "../../utils/getCookiesToken";
 
 ChartJS.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
 
@@ -16,6 +17,7 @@ export default function BarChart({ chartValueOptions }: any) {
     const [error, setError] = useState<string | null>(null);
     const { currency } = useContext(CurrencyContext);
     const [darkmode] = useDarkMode();
+    const token = getAccessToken()
 
     const chartOptions = {
         base: 0,
@@ -80,8 +82,8 @@ export default function BarChart({ chartValueOptions }: any) {
             return await fetch(
                 `${import.meta.env.VITE_API_URL}/api/expenses?start=${start.toISOString().split("T")[0]}&end=${end.toISOString().split("T")[0]}&category=${category}&type=${type || ""}`,
                 {
-                    mode: 'cors',
-                    credentials: 'include',
+                    mode: 'cors', credentials: 'include',
+                    headers: { Authorization: `${token}` },
                 }
             )
                 .then(async (res) => await res.json())
@@ -96,8 +98,8 @@ export default function BarChart({ chartValueOptions }: any) {
             return await fetch(
                 `${import.meta.env.VITE_API_URL}/api/incomes?start=${start.toISOString().split("T")[0]}&end=${end.toISOString().split("T")[0]}`,
                 {
-                    mode: 'cors',
-                    credentials: 'include',
+                    mode: 'cors', credentials: 'include',
+                    headers: { Authorization: `${token}` },
                 }
             )
                 .then(async (res) => await res.json())

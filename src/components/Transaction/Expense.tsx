@@ -8,6 +8,7 @@ import ExpenseFilter from '../UI/ExpenseFilter.tsx';
 import Input from './../UI/searchButton.tsx';
 import TransactionCard from './TransactionCard';
 import type { Category, Transaction } from './Types';
+import { getAccessToken } from '../../utils/getCookiesToken.ts';
 
 type ChartOptions = {
     start: Date;
@@ -50,7 +51,7 @@ export default function Expense() {
     const [categoryList, setCategoryList] = useState<any[]>([]);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
-    const token = document.cookie.split("; ")[0].split("=")[1];
+    const token = getAccessToken();
 
     const filteredTransactions = transactions.filter((t) => {
         const matchesSearch =
@@ -144,8 +145,8 @@ export default function Expense() {
             const res = await fetch(
                 `${import.meta.env.VITE_API_URL}/api/expenses`,
                 {
-                    mode: 'cors',
-                    credentials: 'include',
+                    mode: 'cors', credentials: 'include',
+                    headers: { Authorization: `${token}` },
                     method: 'POST',
                     body: formData,
                 },
@@ -215,8 +216,8 @@ export default function Expense() {
             const res = await fetch(
                 `${import.meta.env.VITE_API_URL}/api/expenses/${editingId}`,
                 {
-                    mode: 'cors',
-                    credentials: 'include',
+                    mode: 'cors', credentials: 'include',
+                    headers: { Authorization: `${token}` },
                     method: 'PUT',
                     body: formData,
                 },
@@ -246,8 +247,8 @@ export default function Expense() {
             return await fetch(
                 `${import.meta.env.VITE_API_URL}/api/receipts/${id}`,
                 {
-                    mode: 'cors',
-                    credentials: 'include',
+                    mode: 'cors', credentials: 'include',
+                    headers: { Authorization: `${token}` },
                     method: 'GET',
                 },
             ).then(async (res) =>
@@ -267,8 +268,8 @@ export default function Expense() {
         if (!token) return;
         try {
             await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/${id}`, {
-                mode: 'cors',
-                credentials: 'include',
+                mode: 'cors', credentials: 'include',
+                headers: { Authorization: `${token}` },
                 method: 'DELETE',
             });
             await fetchExpenses(token, setTransactions, t);

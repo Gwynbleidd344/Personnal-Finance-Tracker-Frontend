@@ -1,11 +1,14 @@
+import { getAccessToken } from "./getCookiesToken";
+
 export default async function changePassword(currentPassword: string, newPassword: string) {
+    const token = getAccessToken()
     try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/change-password`, {
             method: "POST",
-            mode: 'cors',
-            credentials: 'include',
+            mode: 'cors', credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `${token}`
             },
             body: JSON.stringify({ oldPassword: currentPassword, newPassword }),
         });

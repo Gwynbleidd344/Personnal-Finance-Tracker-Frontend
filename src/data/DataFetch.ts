@@ -1,8 +1,11 @@
+import { getAccessToken } from "../utils/getCookiesToken";
+
 export async function getExpenses() {
+    const token = getAccessToken()
     try {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses`, {
-            mode: 'cors',
-            credentials: 'include',
+            mode: 'cors', credentials: 'include',
+            headers: { Authorization: `${token}` },
         });
 
         if (!response.ok) {

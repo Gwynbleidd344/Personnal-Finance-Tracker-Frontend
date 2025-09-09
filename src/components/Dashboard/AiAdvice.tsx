@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useState, useEffect } from "react";
+import { getAccessToken } from "../../utils/getCookiesToken";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -13,7 +14,7 @@ export default function AiAdvice() {
     const [showAdvice, setShowAdvice] = useState(false);
 
     const language = localStorage.getItem("appLanguage") || "en";
-    const accessToken = localStorage.getItem("accessToken");
+    const token = getAccessToken();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,16 +23,16 @@ export default function AiAdvice() {
             try {
                 const [expensesRes, incomesRes, categoriesRes] = await Promise.all([
                     fetch(`${import.meta.env.VITE_API_URL}/api/expenses`, {
-                        mode: 'cors',
-                        credentials: 'include',
+                        mode: 'cors', credentials: 'include',
+                        headers: { Authorization: `${token}` },
                     }),
                     fetch(`${import.meta.env.VITE_API_URL}/api/incomes`, {
-                        mode: 'cors',
-                        credentials: 'include',
+                        mode: 'cors', credentials: 'include',
+                        headers: { Authorization: `${token}` },
                     }),
                     fetch(`${import.meta.env.VITE_API_URL}/api/categories`, {
-                        mode: 'cors',
-                        credentials: 'include',
+                        mode: 'cors', credentials: 'include',
+                        headers: { Authorization: `${token}` },
                     }),
                 ]);
 
@@ -67,7 +68,7 @@ export default function AiAdvice() {
         };
 
         fetchData();
-    }, [accessToken, language]);
+    }, [token, language]);
 
     return (
         <section className="flex flex-wrap items-end text-gray-800 gap-6 border border-gray-300 dark:border-gray-800 dark:bg-gray-800 dark:text-white rounded-lg px-6 py-4 m-4 mb-0 mx-0">

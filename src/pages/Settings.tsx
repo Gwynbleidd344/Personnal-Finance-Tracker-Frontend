@@ -7,6 +7,7 @@ import ThemeToggle from '../components/UI/ThemeToggle';
 import CurrencySettings from '../components/Settings/CurrencySettings';
 import DeleteData from "../components/Settings/DeleteData.tsx";
 import DeleteAccount from '../components/Settings/DeleteAccount.tsx';
+import { getAccessToken } from '../utils/getCookiesToken.ts';
 
 export default function Settings() {
     const [isChangePasswordOpen, setIsChangePasswordOpen] =
@@ -16,11 +17,12 @@ export default function Settings() {
 
     const { t } = useTranslation();
     const [userSummary, setUserSummary] = useState<{ email: string, createdAt: string }>({ createdAt: '', email: '' });
+    const token = getAccessToken()
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
-            mode: 'cors',
-            credentials: 'include',
+            mode: 'cors', credentials: 'include',
+            headers: { Authorization: `${token}` },
         })
             .then(async res => setUserSummary(await res.json()))
             .catch(rej => console.log(rej.message));

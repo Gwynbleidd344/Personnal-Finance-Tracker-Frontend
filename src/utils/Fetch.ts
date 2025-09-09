@@ -8,8 +8,8 @@ export const fetchCategories = async (
   if (!token) return [];
   try {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/categories`, {
-      mode: 'cors',
-      credentials: 'include',
+      mode: 'cors', credentials: 'include',
+      headers: { Authorization: `${token}` },
     });
     const data = await res.json();
     const cats: Category[] = Array.isArray(data) ? data : [];
@@ -32,8 +32,8 @@ export const fetchExpenses = async (
   if (!token) return;
   try {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses`, {
-      mode: 'cors',
-      credentials: 'include',
+      mode: 'cors', credentials: 'include',
+      headers: { Authorization: `${token}` },
     });
     const data = await res.json();
 

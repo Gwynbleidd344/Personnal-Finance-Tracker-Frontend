@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FaList, FaPlus, FaThLarge } from 'react-icons/fa';
 import TransactionCard from './TransactionCard';
 import type { Transaction } from './Types';
+import { getAccessToken } from '../../utils/getCookiesToken';
 
 type ActionsModel = {
     status: boolean;
@@ -39,7 +40,7 @@ export default function Income() {
     };
 
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const token = document.cookie.split("; ")[0].split("=")[1];
+    const token = getAccessToken();
 
     const [searchTerm, setSearchTerm] = useState('');
     const filteredTransactions = transactions.filter((t) => {
@@ -53,8 +54,8 @@ export default function Income() {
         if (!token) return;
         try {
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/incomes`, {
-                mode: 'cors',
-                credentials: 'include',
+                mode: 'cors', credentials: 'include',
+                headers: { Authorization: `${token}` },
             });
             const data = await res.json();
             const formatted: Transaction[] = data.map((item: any) => ({
@@ -88,11 +89,11 @@ export default function Income() {
 
         try {
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/incomes`, {
-                mode: 'cors',
-                credentials: 'include',
+                mode: 'cors', credentials: 'include',
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `${token}`,
                 },
                 body: JSON.stringify({
                     amount,
@@ -127,11 +128,11 @@ export default function Income() {
 
         try {
             fetch(`${import.meta.env.VITE_API_URL}/api/incomes/` + incomeId, {
-                mode: 'cors',
-                credentials: 'include',
+                mode: 'cors', credentials: 'include',
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `${token}`,
                 },
                 body: JSON.stringify({
                     amount,
@@ -159,11 +160,11 @@ export default function Income() {
         incomeId = cardIdRef.current;
         try {
             fetch(`${import.meta.env.VITE_API_URL}/api/incomes/` + incomeId, {
-                mode: 'cors',
-                credentials: 'include',
+                mode: 'cors', credentials: 'include',
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `${token}`,
                 },
             })
                 .then(() => fetchTransactions())
@@ -230,11 +231,10 @@ export default function Income() {
                 <AnimatePresence>
                     <motion.div
                         layout
-                        className={`mt-2 w-full overflow-y-auto px-4 pt-3 ${
-                            view === 'grid'
-                                ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'
-                                : 'flex flex-col space-y-4'
-                        }`}
+                        className={`mt-2 w-full overflow-y-auto px-4 pt-3 ${view === 'grid'
+                            ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'
+                            : 'flex flex-col space-y-4'
+                            }`}
                         style={{ maxHeight: 'calc(100vh - 220px)' }}
                     >
                         {filteredTransactions.map((t) => (
@@ -294,13 +294,13 @@ export default function Income() {
                                 isModifying.current.status
                                     ? isModifying.current.isDeleting
                                         ? handleDeleteTransaction(
-                                              e,
-                                              cardIdRef.current,
-                                          )
+                                            e,
+                                            cardIdRef.current,
+                                        )
                                         : handleUpdateTransaction(
-                                              e,
-                                              cardIdRef.current,
-                                          )
+                                            e,
+                                            cardIdRef.current,
+                                        )
                                     : handleAddTransaction(e)
                             }
                         >
@@ -346,11 +346,10 @@ export default function Income() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className={`rounded-lg px-5 py-2 font-medium text-white transition ${
-                                        isModifying.current.isDeleting
-                                            ? 'bg-red-700 hover:bg-red-800'
-                                            : 'bg-emerald-600 hover:bg-emerald-700'
-                                    }`}
+                                    className={`rounded-lg px-5 py-2 font-medium text-white transition ${isModifying.current.isDeleting
+                                        ? 'bg-red-700 hover:bg-red-800'
+                                        : 'bg-emerald-600 hover:bg-emerald-700'
+                                        }`}
                                 >
                                     {isModifying.current.status
                                         ? isModifying.current.isDeleting

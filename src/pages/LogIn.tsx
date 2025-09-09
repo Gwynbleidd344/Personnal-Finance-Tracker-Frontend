@@ -26,8 +26,7 @@ export default function LogIn() {
             setLoading(true);
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
                 method: 'POST',
-                mode: 'cors',
-                credentials: 'include',
+                mode: 'cors', credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, rememberMe }),
             });
@@ -59,6 +58,7 @@ export default function LogIn() {
                 setLoading(true);
                 const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
                     method: 'POST',
+                    mode: 'cors', credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ access_token: tokenResponse.access_token }),
                 });

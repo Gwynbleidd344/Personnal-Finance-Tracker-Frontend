@@ -8,6 +8,7 @@ import BarChart from '../components/Dashboard/BarChart.tsx';
 import ExpenseFilter from '../components/UI/ExpenseFilter.tsx';
 import useWindowDimensions from '../hooks/useWindowDimensions.ts';
 import AiAdvice from '../components/Dashboard/AiAdvice.tsx';
+import { getAccessToken } from '../utils/getCookiesToken.ts';
 
 type MonthlySummaryType = {
     year: number
@@ -18,7 +19,7 @@ type MonthlySummaryType = {
 }
 
 export default function Dashboard() {
-    const token = document.cookie.split("; ")[0].split("=")[1]
+    const token = getAccessToken()
     const { width } = useWindowDimensions()
     const isWideViewPort = () => width > 1024
 
@@ -36,8 +37,8 @@ export default function Dashboard() {
     function getMonthlySummary(month: string) {
         try {
             fetch(`${import.meta.env.VITE_API_URL}/api/summary/monthly?month=` + month, {
-                mode: 'cors',
-                credentials: 'include',
+                mode: 'cors', credentials: 'include',
+                headers: { Authorization: `${token}` },
             })
                 .then(res => res.json())
                 .then(res => setMonthlySummary(res))
@@ -50,8 +51,8 @@ export default function Dashboard() {
     function checkMonthBalance() {
         try {
             fetch(`${import.meta.env.VITE_API_URL}/api/summary/alerts`, {
-                mode: 'cors',
-                credentials: 'include',
+                mode: 'cors', credentials: 'include',
+                headers: { Authorization: `${token}` },
             })
                 .then(res => res.json())
                 .then(res => setBalaceAlert(res))
@@ -65,8 +66,8 @@ export default function Dashboard() {
         if (!token) return [];
         try {
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/categories`, {
-                mode: 'cors',
-                credentials: 'include',
+                mode: 'cors', credentials: 'include',
+                headers: { Authorization: `${token}` },
             });
             const data = await res.json();
             const cats: any[] = Array.isArray(data) ? data : [];
