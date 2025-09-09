@@ -104,12 +104,12 @@ export default function TransactionCard({
                     }
                 >
                     {/* Name & Amount */}
-                    <div className="mt-6 flex w-fit items-center justify-between space-x-4 capitalize">
-                        <h2 className="mb-1 truncate pl-1.5 text-xl leading-tight font-semibold text-gray-900 dark:text-gray-100">
+                    <div className="mt-4 flex w-fit items-center justify-between space-x-4 capitalize">
+                        <h2 className="truncate pl-1.5 text-lg leading-tight font-semibold text-gray-900 dark:text-gray-100">
                             {formatName(transaction.name)}
                         </h2>
                         <p
-                            className={`text-2xl font-bold tracking-tight ${
+                            className={`text-xl font-bold tracking-tight ${
                                 transaction.type === 'expense'
                                     ? 'text-red-600 dark:text-red-500/75'
                                     : 'text-emerald-600 dark:text-emerald-400'
@@ -124,22 +124,22 @@ export default function TransactionCard({
                     </div>
 
                     {/* Category / Source & Date */}
-                    <div className="text-md mt-1 flex flex-wrap items-center gap-4 text-gray-500 dark:text-gray-400">
-                        <span className="max-w-[150px] truncate rounded-lg bg-gray-300 px-3 py-1.5 font-medium text-gray-700 dark:bg-gray-800  dark:text-gray-300">
-
+                    <div className="mt-1 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                        <span className="inline-block rounded-lg bg-gray-300 px-3 py-1.5 font-medium whitespace-nowrap text-gray-700 dark:bg-gray-800 dark:text-gray-300">
                             {formatName(
                                 transaction.type === 'expense'
                                     ? transaction.category || 'Uncategorized'
                                     : transaction.source || 'Unknown',
                             )}
                         </span>
-                        <span className="font-medium text-gray-500 dark:text-gray-400">
+
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                             {formattedDate}
                         </span>
                         {transaction.start_date && (
                             <>
-                        {/* //marque pour is_recurrent encore à faire */}
-                                <span className="font-medium">
+                                {/* //marque pour is_recurrent encore à faire */}
+                                <span className="text-xs">
                                     {formattedEndDate}
                                 </span>
                             </>
@@ -148,11 +148,11 @@ export default function TransactionCard({
                 </div>
 
                 {/* Action buttons */}
-                <div className="mt-2 ml-4 flex space-x-2 min-h-full">
+                <div className="relative mt-2 ml-4 flex min-h-full space-x-2">
                     {transaction.receipt_id && (
                         <button
                             onClick={actions?.onDownload}
-                            className="group/btn flex h-10 w-10 items-center justify-center rounded-md bg-blue-600  text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-blue-700 hover:shadow-lg active:scale-95"
+                            className="group/btn absolute top-0 -left-10 flex h-8 w-8 items-center justify-center rounded-md bg-blue-600 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-blue-700 hover:shadow-lg active:scale-95"
                         >
                             <FaFileDownload className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
                         </button>
@@ -167,14 +167,14 @@ export default function TransactionCard({
                     >
                         <button
                             onClick={actions?.onChange}
-                            className="group/btn flex h-10 w-10 items-center justify-center rounded-md bg-gray-300 text-gray-900  transition-all duration-200 hover:scale-105 hover:bg-gray-300 hover:shadow-lg active:scale-95 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                            className="group/btn flex h-8 w-8 items-center justify-center rounded-md bg-gray-300 text-gray-900 transition-all duration-200 hover:scale-105 hover:bg-gray-300 hover:shadow-lg active:scale-95 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                         >
                             <FaExchangeAlt className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
                         </button>
 
                         <button
                             onClick={actions?.onDelete}
-                            className="group/btn flex h-10 w-10 items-center justify-center rounded-md bg-red-700/90 text-gray-100 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95"
+                            className="group/btn flex h-8 w-8 items-center justify-center rounded-md bg-red-700/90 text-gray-100 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95"
                         >
                             <FaTrash className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
                         </button>
