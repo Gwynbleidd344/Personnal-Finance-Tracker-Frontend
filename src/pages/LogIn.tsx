@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
 
 import applelogo from '../assets/Apple.svg';
 
@@ -50,6 +51,41 @@ export default function LogIn() {
             setLoading(false);
         }
     };
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            try {
+                setLoading(true);
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ access_token: tokenResponse.access_token }),
+                });
+
+                const text = await res.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch {
+                    throw new Error('Réponse non JSON');
+                }
+
+                if (res.ok) {
+                    localStorage.setItem('accessToken', data.accessToken);
+                    navigate('/dashboard');
+                } else {
+                    setError(data.message || 'Erreur inconnue');
+                }
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Erreur inconnue');
+            } finally {
+                setLoading(false);
+            }
+        },
+        onError: () => {
+            setError('Google login failed');
+        },
+    });
 
     return (
         <div className="relative flex min-h-screen pt-0 flex-col justify-center bg-gray-100 py-12 sm:px-6 lg:px-8">
@@ -188,7 +224,9 @@ export default function LogIn() {
                     </div>
                     <div className="mt-2 flex gap-4">
 
-                        <button className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-2 font-semibold text-black transition hover:bg-blue-50">
+                        <button
+                            onClick={() => googleLogin()}
+                            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-2 font-semibold text-black transition hover:bg-blue-50 cursor-pointer">
                             <img
                                 src={googleLogo}
                                 alt="Google Logo"
