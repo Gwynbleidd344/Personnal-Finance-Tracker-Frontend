@@ -50,7 +50,7 @@ export default function Expense() {
     const [categoryList, setCategoryList] = useState<any[]>([]);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
-    const token = localStorage.getItem('accessToken');
+    const token = document.cookie.split("; ")[0].split("=")[1];
 
     const filteredTransactions = transactions.filter((t) => {
         const matchesSearch =

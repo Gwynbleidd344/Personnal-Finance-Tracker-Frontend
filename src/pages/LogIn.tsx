@@ -40,7 +40,6 @@ export default function LogIn() {
             }
 
             if (res.ok) {
-                localStorage.setItem('accessToken', data.accessToken);
                 navigate('/dashboard');
             } else {
                 setError(data.message || 'Erreur inconnue');

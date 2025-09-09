@@ -12,7 +12,7 @@ export default function DeleteData() {
   };
 
   const confirmDelete = async () => {
-    const token = localStorage.getItem("accessToken");
+    const token = document.cookie.split("; ")[0].split("=")[1];
     if (!token) return;
 
     setIsConfirmOpen(false);

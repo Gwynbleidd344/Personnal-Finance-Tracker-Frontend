@@ -127,7 +127,7 @@ export default function NavBar() {
                 to="/login">
                 <div
                     className={`flex ${isWideViewPort() ? 'mt-4' : ''} cursor-pointer text-nowrap items-center space-x-2 text-gray-700 hover:text-red-600 dark:text-gray-200`}
-                    onClick={() => localStorage.removeItem('accessToken')}
+                    onClick={() => document.cookie.split("; ").forEach(cookie => document.cookie = cookie.split("=")[0] + "=;expires=" + new Date().toUTCString())}
                 >
                     <i className="bxr bx-arrow-out-left-square-half text-2xl"></i>
                     {isWideViewPort() && (<span className={textAnimation('text-xl font-medium')}>

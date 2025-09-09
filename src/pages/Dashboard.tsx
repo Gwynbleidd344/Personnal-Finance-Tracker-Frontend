@@ -18,7 +18,7 @@ type MonthlySummaryType = {
 }
 
 export default function Dashboard() {
-    const token = localStorage.getItem('accessToken')
+    const token = document.cookie.split("; ")[0].split("=")[1]
     const { width } = useWindowDimensions()
     const isWideViewPort = () => width > 1024
 

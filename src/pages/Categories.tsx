@@ -19,7 +19,6 @@ type Message = {
 };
 
 export default function Categories() {
-    const token = localStorage.getItem("accessToken");
     const { t } = useTranslation();
     const { width } = useWindowDimensions()
     const isWideViewPort = () => width > 1024

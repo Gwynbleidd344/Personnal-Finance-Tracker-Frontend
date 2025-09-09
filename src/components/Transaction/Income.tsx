@@ -39,7 +39,7 @@ export default function Income() {
     };
 
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const token = localStorage.getItem('accessToken');
+    const token = document.cookie.split("; ")[0].split("=")[1];
 
     const [searchTerm, setSearchTerm] = useState('');
     const filteredTransactions = transactions.filter((t) => {
