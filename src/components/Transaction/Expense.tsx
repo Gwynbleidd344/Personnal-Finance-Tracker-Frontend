@@ -278,57 +278,65 @@ export default function Expense() {
     };
 
     return (
-        <div className="z-50 flex h-[96vh] w-full flex-col dark:border-2 dark:border-gray-800 items-center rounded-lg bg-gray-100 dark:bg-gray-900">
-            <div className="flex min-h-full w-full max-w-7xl flex-col rounded-2xl p-6">
+        <div className="z-50 flex h-[96vh] w-full flex-col items-center rounded-lg bg-gray-100 dark:border-2 dark:border-gray-800 dark:bg-gray-900">
+            <div className="flex min-h-full w-full flex-col rounded-2xl">
                 {/* Header */}
-                <div className="flex flex-col border-b border-gray-300 pb-2 text-3xl font-bold md:flex-row md:items-center md:justify-between">
-                    <h1 className="text-3xl font-bold dark:text-gray-100">
-                        {t('expenses', 'Expenses')}
-                    </h1>
-                    <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-2">
-                        {/* Add button */}
-                        <button
-                            onClick={() => setIsModalOpen(true)}
-                            className="flex cursor-pointer items-center gap-2 rounded-lg bg-gray-200 px-4 py-2 text-lg font-medium text-gray-800 shadow-sm transition-all duration-200 hover:bg-gray-300 hover:shadow-md active:scale-95"
-                        >
-                            <FaPlus className="text-lg text-gray-600" />
-                            <span>{t('add', 'Add')}</span>
-                        </button>
+                <div className="flex flex-col border-gray-300 px-5 pt-5 text-3xl font-bold md:flex-row md:items-center md:justify-between">
+                    <div className=" flex items-center w-full justify-between border-b border-gray-300 dark:border-gray-700">
+                    <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100 p-2 mb-3">
+                            {t('expenses', 'Expenses')}
+                        </h3>
 
-                        {/* Search */}
-                        <div className="relative flex items-center">
-                            <Input
-                                value={searchTerm}
-                                onChange={setSearchTerm}
-                                placeholder={t('search', 'Search')}
-                            />
-                        </div>
-
-                        {/* View toggle */}
-                        <div className="flex space-x-2">
+                        <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-2">
+                            {/* Add button */}
                             <button
-                                onClick={toggleView}
-                                className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-gray-200 text-gray-800 transition hover:bg-gray-300 active:scale-95"
+                                onClick={() => setIsModalOpen(true)}
+                                className="flex cursor-pointer items-center gap-2 rounded-lg bg-gray-200 px-4 py-2 text-lg font-medium text-gray-800 shadow-sm transition-all duration-200 hover:bg-gray-300 hover:shadow-md active:scale-95"
                             >
-                                {view === 'grid' ? <FaList /> : <FaThLarge />}
+                                <FaPlus className="text-lg text-gray-600" />
+                                <span>{t('add', 'Add')}</span>
                             </button>
+
+                            {/* Search */}
+                            <div className="relative flex items-center">
+                                <Input
+                                    value={searchTerm}
+                                    onChange={setSearchTerm}
+                                    placeholder={t('search', 'Search')}
+                                />
+                            </div>
+
+                            {/* View toggle */}
+                            <div className="flex space-x-2">
+                                <button
+                                    onClick={toggleView}
+                                    className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-gray-200 text-gray-800 transition hover:bg-gray-300 active:scale-95"
+                                >
+                                    {view === 'grid' ? (
+                                        <FaList />
+                                    ) : (
+                                        <FaThLarge />
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <ExpenseFilter
-                    chartOptions={chartOptions}
-                    setChartOptions={setChartOptions}
-                    categoryList={categoryList}
-                />
+                <div className="px-4 pb-2.5">
+                    <ExpenseFilter
+                        chartOptions={chartOptions}
+                        setChartOptions={setChartOptions}
+                        categoryList={categoryList}
+                    />
+                </div>
 
                 {/* Transactions */}
                 <AnimatePresence>
                     <motion.div
                         layout
-                        className={`mt-2 w-full overflow-y-auto pt-3 ${
+                        className={`mt-2 w-full overflow-y-auto px-4 pt-3 ${
                             view === 'grid'
-                                ? 'grid grid-cols-1 gap-4 pb-4 sm:grid-cols-2 lg:grid-cols-3'
+                                ? 'grid grid-cols-1 gap-3  sm:grid-cols-2 lg:grid-cols-3'
                                 : 'flex flex-col space-y-4'
                         }`}
                         style={{ maxHeight: 'calc(100vh - 220px)' }}
