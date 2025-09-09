@@ -173,13 +173,13 @@ export default function Income() {
     };
 
     return (
-        <div className="z-50 flex h-[96vh] dark:border-2 dark:border-gray-800 w-full flex-col items-center rounded-lg  bg-gray-100 dark:bg-gray-900">
+        <div className="z-50 flex lg:h-[96vh] h-[calc(96vh-120px)] dark:border-2 dark:border-gray-800 w-full flex-col items-center rounded-lg  bg-gray-100 dark:bg-gray-900">
             <div className="flex min-h-full w-full max-w-7xl flex-col rounded-2xl p-6">
                 {/* Header */}
                 <div className="flex flex-col border-b border-gray-300 dark:text-gray-100 dark:border-gray-500 pb-2 text-3xl font-bold md:flex-row md:items-center md:justify-between">
                     <h1 className="text-3xl font-bold">{t('incomes','Incomes')}</h1>
 
-                    <div className="flex flex-col md:flex-row md:items-center md:space-x-2 space-y-2 md:space-y-0">
+                    <div className="flex space-y-2 flex-row md:items-center md:space-y-0 space-x-2 md:mt-0 mt-2">
                         {/* Add Button */}
                         <button
                             onClick={openModal}
@@ -203,7 +203,7 @@ export default function Income() {
                         {/* View Toggle Button */}
                         <button
                             onClick={toggleView}
-                            className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-gray-200 text-gray-800 transition hover:bg-gray-300 active:scale-95"
+                            className="hidden md:flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-gray-200 text-gray-800 transition hover:bg-gray-300 active:scale-95"
                         >
                             {view === 'grid' ? <FaList /> : <FaThLarge />}
                         </button>
