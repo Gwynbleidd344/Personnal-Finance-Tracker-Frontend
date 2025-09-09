@@ -126,6 +126,7 @@ export default function TransactionCard({
                     {/* Category / Source & Date */}
                     <div className="mt-1 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                         <span className="inline-block rounded-lg bg-gray-300 px-3 py-1.5 font-medium whitespace-nowrap text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+
                             {formatName(
                                 transaction.type === 'expense'
                                     ? transaction.category || 'Uncategorized'
@@ -175,6 +176,7 @@ export default function TransactionCard({
                         <button
                             onClick={actions?.onDelete}
                             className="group/btn flex h-8 w-8 items-center justify-center rounded-md bg-red-700/90 text-gray-100 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95"
+
                         >
                             <FaTrash className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
                         </button>

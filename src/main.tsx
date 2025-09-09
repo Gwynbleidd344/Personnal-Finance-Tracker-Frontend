@@ -19,6 +19,7 @@ import SignUp from './pages/SignUp';
 import Support from './pages/Support.tsx';
 import Income from './components/Transaction/Income.tsx';
 import { CurrencyProvider } from './context/CurrencyContext.tsx';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const router = createBrowserRouter([
     {
@@ -39,8 +40,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <CurrencyProvider >
-            <RouterProvider router={router} />
-        </CurrencyProvider>
+                <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+            <CurrencyProvider >
+                <RouterProvider router={router} />
+            </CurrencyProvider>
+        </GoogleOAuthProvider>
     </StrictMode>,
 );
