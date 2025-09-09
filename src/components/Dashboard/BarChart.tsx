@@ -30,10 +30,10 @@ export default function BarChart({ chartValueOptions }: any) {
                     color: darkmode ? "#E5E7EB" : "#374151",
                 },
                 ticks: {
-                    color: darkmode ? "#D1D5DB" : "#374151", 
+                    color: darkmode ? "#D1D5DB" : "#374151",
                 },
                 grid: {
-                    color: darkmode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)", 
+                    color: darkmode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
                     drawBorder: false,
                 },
             },
@@ -41,13 +41,13 @@ export default function BarChart({ chartValueOptions }: any) {
                 title: {
                     display: true,
                     text: t("month", "Month"),
-                    color: darkmode ? "#E5E7EB" : "#374151", 
+                    color: darkmode ? "#E5E7EB" : "#374151",
                 },
                 ticks: {
-                    color: darkmode ? "#D1D5DB" : "#374151", 
+                    color: darkmode ? "#D1D5DB" : "#374151",
                 },
                 grid: {
-                    color: darkmode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)", 
+                    color: darkmode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
                     drawBorder: false,
                 },
             },
@@ -80,7 +80,8 @@ export default function BarChart({ chartValueOptions }: any) {
             return await fetch(
                 `${import.meta.env.VITE_API_URL}/api/expenses?start=${start.toISOString().split("T")[0]}&end=${end.toISOString().split("T")[0]}&category=${category}&type=${type || ""}`,
                 {
-                    headers: { Authorization: "Bearer " + localStorage.getItem("accessToken") },
+                    mode: 'cors',
+                    credentials: 'include',
                 }
             )
                 .then(async (res) => await res.json())
@@ -95,7 +96,8 @@ export default function BarChart({ chartValueOptions }: any) {
             return await fetch(
                 `${import.meta.env.VITE_API_URL}/api/incomes?start=${start.toISOString().split("T")[0]}&end=${end.toISOString().split("T")[0]}`,
                 {
-                    headers: { Authorization: "Bearer " + localStorage.getItem("accessToken") },
+                    mode: 'cors',
+                    credentials: 'include',
                 }
             )
                 .then(async (res) => await res.json())
@@ -126,18 +128,18 @@ export default function BarChart({ chartValueOptions }: any) {
                             new Date() < new Date(expense.end_date || "30000")
                                 ? (date = new Date())
                                 : expense.end_date
-                                ? (date = new Date(expense.end_date))
-                                : null;
+                                    ? (date = new Date(expense.end_date))
+                                    : null;
                         } else {
                             date = new Date(expense.start_date);
                         }
                         if (date) {
                             if (
                                 !totalPerMonth[
-                                    date.toLocaleDateString(t("local_date_format", "en-US"), {
-                                        year: "numeric",
-                                        month: "short",
-                                    })
+                                date.toLocaleDateString(t("local_date_format", "en-US"), {
+                                    year: "numeric",
+                                    month: "short",
+                                })
                                 ]
                             ) {
                                 totalPerMonth[

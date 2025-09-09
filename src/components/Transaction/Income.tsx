@@ -53,7 +53,8 @@ export default function Income() {
         if (!token) return;
         try {
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/incomes`, {
-                headers: { Authorization: `Bearer ${token}` },
+                mode: 'cors',
+                credentials: 'include',
             });
             const data = await res.json();
             const formatted: Transaction[] = data.map((item: any) => ({
@@ -87,10 +88,11 @@ export default function Income() {
 
         try {
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/incomes`, {
+                mode: 'cors',
+                credentials: 'include',
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     amount,
@@ -125,10 +127,11 @@ export default function Income() {
 
         try {
             fetch(`${import.meta.env.VITE_API_URL}/api/incomes/` + incomeId, {
+                mode: 'cors',
+                credentials: 'include',
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     amount,
@@ -156,10 +159,11 @@ export default function Income() {
         incomeId = cardIdRef.current;
         try {
             fetch(`${import.meta.env.VITE_API_URL}/api/incomes/` + incomeId, {
+                mode: 'cors',
+                credentials: 'include',
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
                 },
             })
                 .then(() => fetchTransactions())

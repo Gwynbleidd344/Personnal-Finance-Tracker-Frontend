@@ -144,8 +144,9 @@ export default function Expense() {
             const res = await fetch(
                 `${import.meta.env.VITE_API_URL}/api/expenses`,
                 {
+                    mode: 'cors',
+                    credentials: 'include',
                     method: 'POST',
-                    headers: { Authorization: `Bearer ${token}` },
                     body: formData,
                 },
             );
@@ -214,8 +215,9 @@ export default function Expense() {
             const res = await fetch(
                 `${import.meta.env.VITE_API_URL}/api/expenses/${editingId}`,
                 {
+                    mode: 'cors',
+                    credentials: 'include',
                     method: 'PUT',
-                    headers: { Authorization: `Bearer ${token}` },
                     body: formData,
                 },
             );
@@ -244,8 +246,9 @@ export default function Expense() {
             return await fetch(
                 `${import.meta.env.VITE_API_URL}/api/receipts/${id}`,
                 {
+                    mode: 'cors',
+                    credentials: 'include',
                     method: 'GET',
-                    headers: { Authorization: `Bearer ${token}` },
                 },
             ).then(async (res) =>
                 res.ok
@@ -264,8 +267,9 @@ export default function Expense() {
         if (!token) return;
         try {
             await fetch(`${import.meta.env.VITE_API_URL}/api/expenses/${id}`, {
+                mode: 'cors',
+                credentials: 'include',
                 method: 'DELETE',
-                headers: { Authorization: `Bearer ${token}` },
             });
             await fetchExpenses(token, setTransactions, t);
         } catch (err) {

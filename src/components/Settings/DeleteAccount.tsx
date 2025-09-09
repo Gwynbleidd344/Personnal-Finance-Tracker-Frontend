@@ -23,8 +23,9 @@ export default function DeleteAccount() {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/user/deleteAccount`,
         {
+          mode: 'cors',
+          credentials: 'include',
           method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
         }
       );
 

@@ -3,9 +3,8 @@ export async function getExpenses() {
         const token = localStorage.getItem('accessToken');
         console.log(token)
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            mode: 'cors',
+            credentials: 'include',
         });
 
         if (!response.ok) {

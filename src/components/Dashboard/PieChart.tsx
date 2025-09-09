@@ -40,7 +40,8 @@ export const PieChart = ({ chartValueOptions }: any) => {
     async function getExpensesOverTime(start: Date, end: Date, category?: string, type?: "one-time" | "recurring") {
         try {
             return await fetch(`${import.meta.env.VITE_API_URL}/api/expenses?start=${start.toISOString().split('T')[0]}&end=${end.toISOString().split('T')[0]}&category=${category}&type=${type || ''}`, {
-                headers: { Authorization: "Bearer " + localStorage.getItem('accessToken') }
+                mode: 'cors',
+                credentials: 'include',
             })
                 .then(async res => await res.json())
                 .catch(rej => console.log(rej.message))

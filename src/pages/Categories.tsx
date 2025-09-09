@@ -45,7 +45,8 @@ export default function Categories() {
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_API_URL}/api/categories/`, {
-            headers: { Authorization: "Bearer " + token },
+            mode: 'cors',
+            credentials: 'include',
         })
             .then(async (res) => {
                 return await res.json().then((res) => {
@@ -79,10 +80,11 @@ export default function Categories() {
             return;
         }
         fetch(`${import.meta.env.VITE_API_URL}/api/categories/`, {
+            mode: 'cors',
+            credentials: 'include',
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer " + token,
             },
             body: JSON.stringify({ name: categoryName }),
         })
@@ -103,9 +105,10 @@ export default function Categories() {
         }
         fetch(`${import.meta.env.VITE_API_URL}/api/categories/${categoryId}`, {
             method: "PUT",
+            mode: 'cors',
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer " + token,
             },
             body: JSON.stringify({ name: categoryName }),
         })
@@ -118,8 +121,9 @@ export default function Categories() {
         fetch(
             `${import.meta.env.VITE_API_URL}/api/categories/${categoryId}?force=${force}`,
             {
+                mode: 'cors',
+                credentials: 'include',
                 method: "DELETE",
-                headers: { Authorization: "Bearer " + token },
             }
         )
             .then(async (res) => await handleNotification(res))

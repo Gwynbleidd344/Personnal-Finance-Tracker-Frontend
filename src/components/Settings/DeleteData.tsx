@@ -21,8 +21,9 @@ export default function DeleteData() {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/user/delete-data`,
         {
+          mode: 'cors',
+          credentials: 'include',
           method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
         }
       );
 

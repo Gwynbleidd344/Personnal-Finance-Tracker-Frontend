@@ -4,9 +4,10 @@ export default async function changePassword(currentPassword: string, newPasswor
 
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/change-password`, {
             method: "POST",
+            mode: 'cors',
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({ oldPassword: currentPassword, newPassword }),
         });

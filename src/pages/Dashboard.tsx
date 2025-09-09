@@ -35,9 +35,10 @@ export default function Dashboard() {
 
     function getMonthlySummary(month: string) {
         try {
-            fetch(`${import.meta.env.VITE_API_URL}/api/summary/monthly?month=` + month,
-                { headers: { Authorization: "Bearer " + token } }
-            )
+            fetch(`${import.meta.env.VITE_API_URL}/api/summary/monthly?month=` + month, {
+                mode: 'cors',
+                credentials: 'include',
+            })
                 .then(res => res.json())
                 .then(res => setMonthlySummary(res))
                 .catch(rej => console.log(rej.message))
@@ -48,9 +49,10 @@ export default function Dashboard() {
 
     function checkMonthBalance() {
         try {
-            fetch(`${import.meta.env.VITE_API_URL}/api/summary/alerts`,
-                { headers: { Authorization: "Bearer " + token } }
-            )
+            fetch(`${import.meta.env.VITE_API_URL}/api/summary/alerts`, {
+                mode: 'cors',
+                credentials: 'include',
+            })
                 .then(res => res.json())
                 .then(res => setBalaceAlert(res))
                 .catch(rej => console.log(rej.message))
@@ -63,7 +65,8 @@ export default function Dashboard() {
         if (!token) return [];
         try {
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/categories`, {
-                headers: { Authorization: `Bearer ${token}` },
+                mode: 'cors',
+                credentials: 'include',
             });
             const data = await res.json();
             const cats: any[] = Array.isArray(data) ? data : [];

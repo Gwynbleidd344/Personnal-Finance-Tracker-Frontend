@@ -20,12 +20,19 @@ export default function AiAdvice() {
             setLoading(true);
             setShowAdvice(false);
             try {
-                const headers = { Authorization: "Bearer " + accessToken };
-
                 const [expensesRes, incomesRes, categoriesRes] = await Promise.all([
-                    fetch(`${import.meta.env.VITE_API_URL}/api/expenses`, { headers }),
-                    fetch(`${import.meta.env.VITE_API_URL}/api/incomes`, { headers }),
-                    fetch(`${import.meta.env.VITE_API_URL}/api/categories`, { headers }),
+                    fetch(`${import.meta.env.VITE_API_URL}/api/expenses`, {
+                        mode: 'cors',
+                        credentials: 'include',
+                    }),
+                    fetch(`${import.meta.env.VITE_API_URL}/api/incomes`, {
+                        mode: 'cors',
+                        credentials: 'include',
+                    }),
+                    fetch(`${import.meta.env.VITE_API_URL}/api/categories`, {
+                        mode: 'cors',
+                        credentials: 'include',
+                    }),
                 ]);
 
                 const [expensesData, incomesData, categoriesData] = await Promise.all([
