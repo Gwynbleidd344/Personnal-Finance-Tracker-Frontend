@@ -148,11 +148,11 @@ export default function TransactionCard({
                 </div>
 
                 {/* Action buttons */}
-                <div className="mt-2 ml-4 flex min-h-full">
+                <div className="mt-2 ml-4 flex space-x-2 min-h-full">
                     {transaction.receipt_id && (
                         <button
                             onClick={actions?.onDownload}
-                            className="group/btn flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-blue-700 hover:shadow-lg active:scale-95"
+                            className="group/btn flex h-10 w-10 items-center justify-center rounded-md bg-blue-600  text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-blue-700 hover:shadow-lg active:scale-95"
                         >
                             <FaFileDownload className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
                         </button>
@@ -167,14 +167,14 @@ export default function TransactionCard({
                     >
                         <button
                             onClick={actions?.onChange}
-                            className="group/btn flex h-10 w-10 items-center justify-center rounded-lg bg-gray-300 text-gray-900  transition-all duration-200 hover:scale-105 hover:bg-gray-300 hover:shadow-lg active:scale-95 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                            className="group/btn flex h-10 w-10 items-center justify-center rounded-md bg-gray-300 text-gray-900  transition-all duration-200 hover:scale-105 hover:bg-gray-300 hover:shadow-lg active:scale-95 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                         >
                             <FaExchangeAlt className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
                         </button>
 
                         <button
                             onClick={actions?.onDelete}
-                            className="group/btn flex h-10 w-10 items-center justify-center rounded-lg bg-red-700/90 text-gray-100 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95"
+                            className="group/btn flex h-10 w-10 items-center justify-center rounded-md bg-red-700/90 text-gray-100 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95"
                         >
                             <FaTrash className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
                         </button>
