@@ -138,9 +138,7 @@ export default function TransactionCard({
                         </span>
                         {transaction.start_date && (
                             <>
-                                <span className="text-gray-300 dark:text-gray-600">
-                                    →
-                                </span>
+                        {/* //marque pour is_recurrent encore à faire */}
                                 <span className="font-medium">
                                     {formattedEndDate}
                                 </span>
