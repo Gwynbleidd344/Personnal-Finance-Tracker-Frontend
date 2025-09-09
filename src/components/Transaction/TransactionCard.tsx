@@ -4,16 +4,17 @@ import type React from "react"
 import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import {
-  FaBolt,
-  FaCoffee,
-  FaExchangeAlt,
-  FaFileDownload,
-  FaFilm,
-  FaMoneyBillWave,
-  FaPlus,
-  FaTaxi,
-  FaTrash,
-  FaUtensils,
+    FaBolt,
+    FaCoffee,
+    FaExchangeAlt,
+    FaFileDownload,
+    FaFilm,
+    FaMoneyBillWave,
+    FaPlus,
+    FaTaxi,
+    FaTrash,
+    FaUtensils,
+    FaSyncAlt, 
 } from "react-icons/fa"
 import { CurrencyContext } from "../../context/CurrencyContext"
 import { formatCurrency } from "../../utils/currency"
@@ -100,10 +101,13 @@ export default function TransactionCard({ transaction, view, actions }: Transact
       {view === "list" ? (
         <div className="grid grid-cols-12 gap-2 items-center ml-12">
           {/* Colonne Nom - 3 colonnes */}
-          <div className="col-span-3">
+          <div className="col-span-3 flex items-center gap-1">
             <h2 className="text-sm sm:text-base font-semibold leading-tight text-gray-900 dark:text-gray-100 capitalize truncate">
               {formatName(transaction.name)}
             </h2>
+            {transaction.is_recurrent && (
+              <FaSyncAlt className="text-gray-400 text-xs" />
+            )}
           </div>
 
           {/* Colonne Catégorie - 3 colonnes */}
@@ -142,9 +146,6 @@ export default function TransactionCard({ transaction, view, actions }: Transact
                 {transaction.type === "expense" ? "-" : "+"}
                 {formatCurrency(transaction.amount, currency, true)}
               </p>
-              {transaction.is_recurrent && (
-                <i className="bx bx-rotate-right text-lg sm:text-xl text-gray-500 dark:text-gray-400" />
-              )}
             </div>
           </div>
 
@@ -177,8 +178,11 @@ export default function TransactionCard({ transaction, view, actions }: Transact
         <div className="flex items-start justify-between">
           <div className="flex flex-col space-y-2">
             <div className="mt-4 flex w-fit items-center justify-between space-x-4 capitalize">
-              <h2 className="pl-1.5 text-lg leading-tight font-semibold text-gray-900 dark:text-gray-100">
+              <h2 className="pl-1.5 text-lg leading-tight font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-1">
                 {formatName(transaction.name)}
+                {transaction.is_recurrent && (
+                  <FaSyncAlt className="text-gray-400 text-sm" /> 
+                )}
               </h2>
               <p
                 className={`text-xl font-bold tracking-tight ${
@@ -190,9 +194,6 @@ export default function TransactionCard({ transaction, view, actions }: Transact
                 {transaction.type === "expense" ? "-" : "+"}
                 {formatCurrency(transaction.amount, currency, true)}
               </p>
-              {transaction.is_recurrent && (
-                <i className="bx bx-rotate-right text-xl text-gray-500 dark:text-gray-400" />
-              )}
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
               <span className="inline-block rounded-lg bg-gray-300 px-3 py-1.5 font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
