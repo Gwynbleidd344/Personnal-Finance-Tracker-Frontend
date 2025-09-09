@@ -1,7 +1,6 @@
 export default async function changePassword(currentPassword: string, newPassword: string) {
     try {
         const token = localStorage.getItem("accessToken");
-        console.log("Token envoyé:", token);
 
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/change-password`, {
             method: "POST",

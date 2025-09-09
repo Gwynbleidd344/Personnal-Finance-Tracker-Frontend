@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import { CurrencyContext } from '../context/CurrencyContext';
-import { formatCurrency } from '../utils/currency';
-import formatAmount from '../utils/FormatAmount';
+import { CurrencyContext } from '../../context/CurrencyContext';
+import { formatCurrency } from '../../utils/currency';
+import formatAmount from '../../utils/FormatAmount';
 
 export default function StatCard({ title, amount, color }: { title: string, amount?: any, color: string }) {
     const { currency } = useContext(CurrencyContext);

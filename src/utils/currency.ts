@@ -12,7 +12,7 @@ export const formatCurrency = (amount: any, currency: string, compact: boolean =
     if (compact) {
         switch (currency) {
             case 'USD':
-                return `$${toCompact(n)}`;
+                return `$${toCompact(n)} $`;
             case 'MGA':
                 return `${toCompact(n)} Ar`;
             case 'EUR':
@@ -23,7 +23,7 @@ export const formatCurrency = (amount: any, currency: string, compact: boolean =
 
     switch (currency) {
         case 'USD':
-            return `$${n.toFixed(2)}`;
+            return `$${n.toFixed(2)} $`;
         case 'MGA':
             return `${n.toFixed(2)} Ar`;
         case 'EUR':

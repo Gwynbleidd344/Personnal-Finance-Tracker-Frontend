@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { t } from "i18next";
-import { getExpenses } from "../data/DataFetch.ts";
-import LoadingSpinner from "./UI/LoadingSpinner.tsx";
-import ErrorMessage from "./UI/ErrorMessage.tsx";
-import { CurrencyContext } from "../context/CurrencyContext.tsx";
-import { formatCurrency } from "../utils/currency.ts";
+import { getExpenses } from "../../data/DataFetch.ts";
+import LoadingSpinner from "../UI/LoadingSpinner.tsx";
+import ErrorMessage from "../UI/ErrorMessage.tsx";
+import { CurrencyContext } from "../../context/CurrencyContext.tsx";
+import { formatCurrency } from "../../utils/currency.ts";
+import useWindowDimensions from "../../hooks/useWindowDimensions.ts";
 
 interface Expense {
     id: number;
@@ -22,6 +23,8 @@ export default function ExpenseList() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { currency } = useContext(CurrencyContext);
+    const { width } = useWindowDimensions()
+    const isWideViewPort = () => width > 450
 
     useEffect(() => {
         const fetchData = async () => {
@@ -61,12 +64,12 @@ export default function ExpenseList() {
                             >
                                 {t("name", "Name")}
                             </th>
-                            <th
+                            {isWideViewPort() && (<th
                                 scope="col"
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-black uppercase tracking-wider"
                             >
                                 {t("category", "Category")}
-                            </th>
+                            </th>)}
                             <th
                                 scope="col"
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-black uppercase tracking-wider"
@@ -84,9 +87,9 @@ export default function ExpenseList() {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-200">
                                     {expense.description || t("no description")}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                {isWideViewPort() && (<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     {expense.category_fk?.name || t("uncategorized")}
-                                </td>
+                                </td>)}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                     {formatCurrency(expense.amount, currency, true)}
                                 </td>

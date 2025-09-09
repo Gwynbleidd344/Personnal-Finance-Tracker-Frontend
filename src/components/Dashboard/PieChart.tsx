@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { Pie } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, Tooltip, Legend, ArcElement } from "chart.js";
 import { useTranslation } from 'react-i18next';
-import { CurrencyContext } from "../context/CurrencyContext";
-import { formatCurrency } from "../utils/currency";
-import useDarkMode from "../hooks/useDarkMode";
+import { CurrencyContext } from "../../context/CurrencyContext";
+import { formatCurrency } from "../../utils/currency";
+import useDarkMode from "../../hooks/useDarkMode";
 
 ChartJS.register(Tooltip, Legend, ArcElement);
 
@@ -22,7 +22,7 @@ export const PieChart = ({ chartValueOptions }: any) => {
             legend: {
                 position: "right" as const,
                 labels: {
-                    color: darkMode ? "#F3F4F6" : "#374151", 
+                    color: darkMode ? "#F3F4F6" : "#374151",
                     font: { size: 14, weight: 500 },
                 },
             },
@@ -116,8 +116,8 @@ export const PieChart = ({ chartValueOptions }: any) => {
     }
 
     return (
-        <div className="h-[40vh] w-[40vh] flex-1/2 max-w-fit cursor-pointer ">
-            {chartData && <Pie options={options} data={chartData} />}
+        <div className="w-[25vw] h-[25vw] -mt-8 cursor-pointer ">
+            {chartData && <Doughnut options={options} data={chartData} />}
         </div>
     );
 };

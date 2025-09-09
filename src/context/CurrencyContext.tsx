@@ -10,10 +10,23 @@ type Props = {
 };
 
 export const CurrencyProvider = ({ children }: Props) => {
-    const [currency, setCurrency] = useState('EUR');
+    const [currencyValue, setCurrencyValue] = useState<string>(() => {
+        try {
+            const stored = localStorage.getItem('currency');
+            return stored || 'EUR';
+        } catch (e) {
+            return 'EUR';
+        }
+    });
+
+    const setCurrency = (c: string) => {
+      localStorage.setItem('currency', c);
+        
+        setCurrencyValue(c);
+    };
 
     return (
-        <CurrencyContext.Provider value={{ currency, setCurrency }}>
+        <CurrencyContext.Provider value={{ currency: currencyValue, setCurrency }}>
             {children}
         </CurrencyContext.Provider>
     );

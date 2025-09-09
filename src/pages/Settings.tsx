@@ -24,7 +24,7 @@ export default function Settings() {
     }, []);
 
     return (
-        <div className="mx-auto h-[96vh] overflow-y-scroll dark:border-2 dark:border-gray-800 rounded-lg bg-gray-100 dark:bg-gray-900 p-8 shadow-md">
+        <div className="mx-auto lg:h-[96vh] h-[calc(96vh-120px)] overflow-y-scroll dark:border-2 dark:border-gray-800 rounded-lg bg-gray-100 dark:bg-gray-900 p-8 shadow-md">
             <h1 className="mb-6 border-b border-gray-300 dark:border-gray-700 pb-4 text-3xl font-bold text-gray-800 dark:text-gray-100">
                 {t('settings_title', 'Settings')}
             </h1>
@@ -33,13 +33,13 @@ export default function Settings() {
                 <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
                     {t('general_account_informations', "General account informations")}
                 </h2>
-                <div className='my-1 bg-gray-50 dark:bg-gray-800 w-fit min-w-[300px] p-2 px-4 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center gap-3'>
+                <div className='my-1 bg-gray-50 dark:bg-gray-800 w-[300px] min-w-[150px] max-w-full p-2 px-4 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center gap-3'>
                     <h4 className='font-medium text-gray-800 dark:text-gray-100 text-[16px]'>Email:</h4>
                     <p className='text-gray-600 dark:text-gray-400'>{userSummary.email}</p>
                 </div>
-                <div className='my-1 bg-gray-50 dark:bg-gray-800 w-fit min-w-[300px] p-2 px-4 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center gap-3'>
+                <div className='my-1 bg-gray-50 dark:bg-gray-800 w-[300px] min-w-[150px] max-w-full p-2 px-4 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center gap-3'>
                     <h4 className='font-medium text-gray-800 dark:text-gray-100 text-[16px]'>{t("join_date", "Join Date")}:</h4>
-                    <p className='text-gray-600 dark:text-gray-400'>{new Date(userSummary.createdAt).toLocaleDateString(t("local_date_format","en-US"), { year: "numeric", month: "short", day: "2-digit" })}</p>
+                    <p className='text-gray-600 dark:text-gray-400'>{new Date(userSummary.createdAt).toLocaleDateString(t("local_date_format", "en-US"), { year: "numeric", month: "short", day: "2-digit" })}</p>
                 </div>
             </div>
 
@@ -67,7 +67,7 @@ export default function Settings() {
                         <span className="font-medium text-gray-800 dark:text-gray-100">
                             {t('change_password', 'Change Password')}
                         </span>
-                        <p className="ml-12 text-gray-500 dark:text-gray-400">
+                        <p className="lg:inline-block hidden ml-12 text-gray-500 dark:text-gray-400">
                             {t(
                                 'change_password_description',
                                 'Change your password to keep your account safe.',
@@ -104,7 +104,7 @@ export default function Settings() {
                         <span className="font-medium text-gray-800 dark:text-gray-100">
                             {t('change_username', 'Change Username')}
                         </span>
-                        <p className="ml-12 text-gray-500 dark:text-gray-400">
+                        <p className="ml-12 lg:inline-block hidden text-gray-500 dark:text-gray-400">
                             {t(
                                 'change_username_description',
                                 'You can change you username at any time.',

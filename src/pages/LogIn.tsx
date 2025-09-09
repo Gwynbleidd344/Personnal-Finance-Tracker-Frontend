@@ -13,6 +13,7 @@ export default function LogIn() {
     const { t } = useTranslation();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [rememberMe, setRememberMe] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function LogIn() {
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, rememberMe }),
             });
 
             const text = await res.text();
@@ -73,14 +74,14 @@ export default function LogIn() {
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white px-4 py-8 shadow-2xl sm:rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={handleLogIn}>
-                        
+
                         <div>
                             <label
                                 htmlFor="email"
                                 className="block text-sm font-medium text-gray-700"
                             >
                                 {t('email_address', 'Email address')}
-                             </label>
+                            </label>
                             <div className="mt-1 relative">
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <FaUser className="text-gray-600" />
@@ -98,15 +99,13 @@ export default function LogIn() {
                                 />
                             </div>
                         </div>
-
-                        
                         <div>
                             <label
                                 htmlFor="password"
                                 className="block text-sm font-medium text-gray-700"
                             >
                                 {t('password_label', 'Password')}
-                             </label>
+                            </label>
                             <div className="mt-1 relative">
                                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <FaLock className="text-gray-600" />
@@ -124,14 +123,14 @@ export default function LogIn() {
                                 />
                             </div>
                         </div>
-
-                        
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
                                 <input
                                     id="remember-me"
                                     name="remember-me"
                                     type="checkbox"
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                                 <label
@@ -147,22 +146,22 @@ export default function LogIn() {
                                     className="font-medium text-indigo-600 hover:text-indigo-500"
                                 >
                                     {t('forgot_password', 'Forgot your password?')}
-                                 </a>
+                                </a>
                             </div>
                         </div>
 
-                        
+
                         <div>
                             <button
                                 type="submit"
                                 className="flex w-full cursor-pointer justify-center rounded-md border border-transparent bg-neutral-950 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-neutral-800 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
                             >
                                 {loading ? <LoadingSpinner /> : t('sign_in', 'Sign in')}
-                             </button>
-                         </div>
-                     </form>
+                            </button>
+                        </div>
+                    </form>
 
-                    
+
                     <div className="mt-6 relative">
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-gray-300" />
@@ -174,21 +173,21 @@ export default function LogIn() {
                         </div>
                     </div>
 
-                    
+
                     <div className="mt-6">
                         <Link to="/signup">
                             <button className="flex w-full cursor-pointer justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none">
                                 {t('create_account', 'Create an account')}
-                             </button>
-                         </Link>
-                     </div>
+                            </button>
+                        </Link>
+                    </div>
 
-                    
+
                     <div className="mt-4 flex justify-center text-gray-500">
                         <h3>{t('or_with', 'or with')}</h3>
                     </div>
                     <div className="mt-2 flex gap-4">
-                        
+
                         <button className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-2 font-semibold text-black transition hover:bg-blue-50">
                             <img
                                 src={googleLogo}
@@ -196,9 +195,9 @@ export default function LogIn() {
                                 className="h-5 w-5"
                             />
                             {t('google', 'Google')}
-                         </button>
+                        </button>
 
-                        
+
                         <button className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-2 font-semibold text-black transition hover:bg-gray-200">
                             <img
                                 src={applelogo}
@@ -207,10 +206,10 @@ export default function LogIn() {
 
                             />
                             {t('apple', 'Apple')}
-                         </button>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     );
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }

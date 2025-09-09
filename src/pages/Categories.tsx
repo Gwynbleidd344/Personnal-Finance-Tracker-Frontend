@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import CategoryList from "../components/Categories/CategoryList";
 import CategoryModal from "../components/Categories/CategoryModal";
 import SearchPanel from "../components/Categories/SearchPanel";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 
 type Category = {
     id: string;
@@ -20,6 +21,8 @@ type Message = {
 export default function Categories() {
     const token = localStorage.getItem("accessToken");
     const { t } = useTranslation();
+    const { width } = useWindowDimensions()
+    const isWideViewPort = () => width > 1024
 
     const [categoryReload, setCategoryReload] = useState<boolean>(false);
     const [categoryList, setCategoryList] = useState<Array<Category> | null>(
@@ -145,7 +148,7 @@ export default function Categories() {
                 ) : null}
             </AnimatePresence>
 
-            <div className="h-[96vh] w-full p-5 bg-gray-100 dark:border-2 dark:border-gray-800 dark:bg-gray-900 rounded-lg">
+            <div className={`${isWideViewPort() ? "h-[96vh]" : "h-[calc(96vh-100px)] overflow-hidden"} w-full p-5 bg-gray-100 dark:border-2 dark:border-gray-800 dark:bg-gray-900 rounded-lg`}>
                 <div className="flex justify-between items-center mb-6 border-b border-gray-300 dark:border-gray-700">
                     <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100 p-2 mb-3">
                         {t('categories_title', 'Categories')}

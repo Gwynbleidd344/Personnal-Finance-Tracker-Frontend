@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import CategoryItem from "./CategoryItem";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 type Category = {
     id: string;
@@ -16,8 +17,11 @@ type Props = {
 };
 
 export default function CategoryList({ categories, searchFilter, onRename, onDelete, onCreate }: Props) {
+    const { width } = useWindowDimensions()
+    const isWideViewPort = () => width > 1024
+
     return (
-    <div className="relative w-full grid grid-cols-3 gap-4 rounded-2xl pb-4 overflow-y-scroll max-h-full">
+    <div className={`relative w-full ${isWideViewPort() ? "grid grid-cols-3" : "flex flex-col h-[calc(100%-120px)]"} gap-4 rounded-2xl pb-4 overflow-y-scroll max-h-full`}>
             <motion.div
         className="w-full px-6 py-5 rounded-xl shadow-sm flex justify-center items-center bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer"
                 layout

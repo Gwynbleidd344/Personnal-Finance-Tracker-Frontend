@@ -19,7 +19,7 @@ export default function ChangePasswordForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col max-w-1/3">
+        <form onSubmit={handleSubmit} className="flex flex-col max-w-[300px] lg:max-w-1/3">
             <input
                 type="password"
                 required

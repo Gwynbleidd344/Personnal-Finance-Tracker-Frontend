@@ -1,19 +1,22 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
-import useLocalStorage from '../hooks/useLocalStorage';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 export default function NavBar() {
     const [isExpanded, setIsExpanded] = useState(false);
     const [username] = useLocalStorage('username', 'User');
     const { t } = useTranslation();
-    const [hoveredItem, setHoveredItem] = useState<string | null>(null); 
+    const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
+    const { width } = useWindowDimensions()
+    const isWideViewPort = () => width > 1024
 
     const textAnimation = (extraClasses = '') =>
-        `transition-all duration-300 delay-150 transform ${
-            isExpanded
-                ? 'opacity-100 translate-x-0'
-                : 'opacity-0 -translate-x-2'
+        `transition-all duration-300 delay-150 transform ${isExpanded
+            ? 'opacity-100 translate-x-0'
+            : 'opacity-0 -translate-x-2'
         } ${extraClasses}`;
 
     const baseItemClasses =
@@ -43,7 +46,7 @@ export default function NavBar() {
         settings: {
             bg: 'bg-gray-500 dark:bg-gray-950',
             text: 'text-white dark:text-white',
-            hover: 'hover:bg-gray-500 dark:hover:bg-gray-950 hover:text-gray-950 dark:hover:text-white',
+            hover: 'hover:bg-gray-500 dark:hover:bg-gray-950 hover:text-white dark:hover:text-white',
         },
         support: {
             bg: 'bg-sky-300 dark:bg-sky-800',
@@ -54,33 +57,33 @@ export default function NavBar() {
 
     const getItemClasses =
         (key: keyof typeof itemColors) =>
-        ({ isActive }: { isActive: boolean }) => {
-            if (hoveredItem && hoveredItem !== key) {
-                return `${baseItemClasses} ${itemColors[key].hover}`;
-            }
-            return isActive
-                ? `${baseItemClasses} ${itemColors[key].bg} ${itemColors[key].text}`
-                : `${baseItemClasses} ${itemColors[key].hover}`;
-        };
+            ({ isActive }: { isActive: boolean }) => {
+                if (hoveredItem && hoveredItem !== key) {
+                    return `${baseItemClasses} ${itemColors[key].hover}`;
+                }
+                return isActive
+                    ? `${baseItemClasses} ${itemColors[key].bg} ${itemColors[key].text}`
+                    : `${baseItemClasses} ${itemColors[key].hover}`;
+            };
 
     return (
         <nav
-            className={`sticky top-0 left-0 m-4 mr-0 flex h-[96vh] flex-col justify-between rounded-lg bg-gray-100 p-6 shadow-md transition-all duration-300 dark:bg-gray-800 ${isExpanded ? 'w-64' : 'w-20'}`}
+            className={`sticky top-0 left-0 m-4 mr-0 flex ${isWideViewPort() ? 'flex-col h-[96vh]  p-6' : 'flex-row w-[calc(100%-32px)] ml-4 p-3 items-center'} justify-between rounded-lg bg-gray-100 shadow-md transition-all duration-300 dark:bg-gray-800 ${isExpanded ? 'w-64' : 'w-20'}`}
             onMouseEnter={() => setIsExpanded(true)}
             onMouseLeave={() => setIsExpanded(false)}
         >
             {/* Header */}
-            <div className="flex flex-col items-center gap-3">
+            {isWideViewPort() ? (<div className="flex flex-col items-center gap-3">
                 <i className="bxr bx-user rounded-full border-4 border-b-blue-600 p-2 text-3xl text-gray-800 dark:text-white"></i>
                 <span
                     className={`${textAnimation('text-xl font-medium text-gray-800 dark:text-white')}`}
                 >
                     {username}
                 </span>
-            </div>
+            </div>) : <div></div>}
 
             {/* Links */}
-            <div className="mt-4 flex flex-col gap-2 font-medium text-gray-700 dark:text-gray-200">
+            <div className={`flex ${isWideViewPort() ? 'flex-col mt-4 gap-2' : 'flex-row items-center gap-4'} font-medium text-gray-700 dark:text-gray-200`}>
                 {(
                     [
                         'dashboard',
@@ -111,23 +114,25 @@ export default function NavBar() {
                                           : key === 'settings'
                                             ? 'cog'
                                             : 'message-question-mark'
-                            } text-2xl`}
+                                } text-2xl mr-1`}
                         ></i>
-                        <span className={`${textAnimation("text-nowrap")}`}>{t(key)}</span>
+                        {isWideViewPort() && (<span className={`${textAnimation("text-nowrap")}`}>{t(key)}</span>)}
                     </NavLink>
                 ))}
             </div>
 
             {/* Footer / Logout */}
-            <NavLink to="/login">
+            <NavLink
+                className={`h-fit items-center`}
+                to="/login">
                 <div
-                    className="mt-4 flex cursor-pointer text-nowrap items-center space-x-2 text-gray-700 hover:text-red-600 dark:text-gray-200"
+                    className={`flex ${isWideViewPort() ? 'mt-4' : ''} cursor-pointer text-nowrap items-center space-x-2 text-gray-700 hover:text-red-600 dark:text-gray-200`}
                     onClick={() => localStorage.removeItem('accessToken')}
                 >
                     <i className="bxr bx-arrow-out-left-square-half text-2xl"></i>
-                    <span className={textAnimation('text-xl font-medium')}>
+                    {isWideViewPort() && (<span className={textAnimation('text-xl font-medium')}>
                         {t('logout')}
-                    </span>
+                    </span>)}
                 </div>
             </NavLink>
         </nav>

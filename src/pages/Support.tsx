@@ -4,7 +4,7 @@ export default function TermsAndConditions() {
     const { t } = useTranslation();
 
     return (
-        <div className="bg-gray-100 dark:bg-gray-900 shadow-md dark:border-2 dark:border-gray-800 rounded-lg p-8 mx-auto h-[96vh] overflow-y-auto">
+        <div className="bg-gray-100 dark:bg-gray-900 shadow-md dark:border-2 dark:border-gray-800 rounded-lg p-8 mx-auto lg:h-[96vh] h-[calc(96vh-120px)] overflow-y-auto">
             <h1 className="m-5 border-b border-gray-300 dark:border-gray-700 p-2 text-3xl font-bold text-gray-900 dark:text-gray-100">
                 {t("terms_title")}
             </h1>

@@ -2,10 +2,10 @@ import { Chart as ChartJS, BarController, BarElement, CategoryScale, LinearScale
 import { useContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { useTranslation } from "react-i18next";
-import type { Transaction } from "./Transaction/Types";
-import { CurrencyContext } from "../context/CurrencyContext";
-import { formatCurrency } from "../utils/currency";
-import useDarkMode from "../hooks/useDarkMode";
+import type { Transaction } from "../Transaction/Types";
+import { CurrencyContext } from "../../context/CurrencyContext";
+import { formatCurrency } from "../../utils/currency";
+import useDarkMode from "../../hooks/useDarkMode";
 
 ChartJS.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
 
@@ -20,6 +20,7 @@ export default function BarChart({ chartValueOptions }: any) {
     const chartOptions = {
         base: 0,
         responsive: true,
+        borderRadius: 4,
         scales: {
             y: {
                 beginAtZero: true,
@@ -221,7 +222,7 @@ export default function BarChart({ chartValueOptions }: any) {
     }
 
     return (
-        <div className="h-[40vh] flex-1/2 min-w-[600px] max-w-[720px] cursor-pointer">
+        <div className="w-[45vw] self-center aspect-video max-h-fit  max-w-[720px] cursor-pointer">
             {chartData && <Bar data={chartData} options={chartOptions} />}
         </div>
     );

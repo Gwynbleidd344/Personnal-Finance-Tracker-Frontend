@@ -21,7 +21,7 @@ export default function ExpenseFilter({
     const { t } = useTranslation();
 
     return (
-        <div className="flex flex-wrap items-end gap-6 border  border-gray-300 dark:border-gray-800 dark:bg-gray-800 dark:text-white rounded-lg px-6 py-4 m-4 mb-0 mx-0">
+        <div className="flex flex-wrap items-end lg:justify-start justify-center gap-6 border border-gray-300 dark:border-gray-800 dark:bg-gray-800 dark:text-white rounded-lg px-6 py-4 m-4 mb-0 mx-0">
             {/* Start Date */}
             <div className="flex flex-col text-gray-600 dark:text-gray-100">
                 <label htmlFor="startExpenseDate" className="text-sm font-medium  mb-1">
