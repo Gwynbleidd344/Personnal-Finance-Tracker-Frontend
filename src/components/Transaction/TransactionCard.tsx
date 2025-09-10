@@ -1,33 +1,35 @@
-import React, { useContext } from "react";
+"use client"
+
+import type React from "react"
+import { useContext } from "react"
+import { useTranslation } from "react-i18next"
 import {
-  FaBolt,
-  FaCoffee,
-  FaExchangeAlt,
-  FaFileDownload,
-  FaFilm,
-  FaMoneyBillWave,
-  FaPlus,
-  FaTaxi,
-  FaTrash,
-  FaUtensils,
-  FaQuestion,
-} from "react-icons/fa";
-import type { Transaction } from "./Types";
-import { useTranslation } from "react-i18next";
-import { CurrencyContext } from "../../context/CurrencyContext";
-import { formatCurrency } from "../../utils/currency";
-import formatName from "../../utils/FormatTransactionName";
-import useWindowDimensions from "../../hooks/useWindowDimensions";
+    FaBolt,
+    FaCoffee,
+    FaExchangeAlt,
+    FaFileDownload,
+    FaFilm,
+    FaMoneyBillWave,
+    FaPlus,
+    FaTaxi,
+    FaTrash,
+    FaUtensils,
+    FaSyncAlt, 
+} from "react-icons/fa"
+import { CurrencyContext } from "../../context/CurrencyContext"
+import { formatCurrency } from "../../utils/currency"
+import formatName from "../../utils/FormatTransactionName"
+import type { Transaction } from "./Types"
 
 type TransactionCardProps = {
-  transaction: Transaction;
-  view: "grid" | "list";
+  transaction: Transaction
+  view: "grid" | "list"
   actions?: {
-    onDownload?: () => void;
-    onChange?: () => void;
-    onDelete?: () => void;
-  };
-};
+    onDownload?: () => void
+    onChange?: () => void
+    onDelete?: () => void
+  }
+}
 
 const categoryIcons: Record<string, React.ReactNode> = {
   Food: <FaUtensils className="text-white" />,
@@ -37,7 +39,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
   Coffee: <FaCoffee className="text-white" />,
   Doctor: <FaPlus className="text-white" />,
   Other: <FaTrash className="text-white" />,
-};
+}
 
 const categoryColors: Record<string, string> = {
   Food: "bg-red-700",
@@ -46,53 +48,47 @@ const categoryColors: Record<string, string> = {
   Utilities: "bg-yellow-700",
   Coffee: "bg-orange-700",
   Doctor: "bg-green-700",
-};
+}
 
-export default function TransactionCard({
-  transaction,
-  view,
-  actions,
-}: TransactionCardProps) {
-  const { currency } = useContext(CurrencyContext);
-  const { t } = useTranslation();
-  const { width } = useWindowDimensions()
-  const isWideViewPort = () => width > 1024
-  
+export default function TransactionCard({ transaction, view, actions }: TransactionCardProps) {
+  const { currency } = useContext(CurrencyContext)
+  const { t } = useTranslation()
+
   const formattedDate = new Date(transaction.date).toLocaleDateString(t("local_date_format", "en-US"), {
     day: "2-digit",
     month: "short",
     year: "numeric",
-  });
+  })
 
-  const formattedEndDate = transaction.end_date ?
-    new Date(transaction.end_date).toLocaleDateString(t("local_date_format", "en-US"),
-      {
-        day: "2-digit"
-        , month: "short",
-        year: "numeric"
-      }) : t('unset', 'Unset')
+  const formattedEndDate = transaction.end_date
+    ? new Date(transaction.end_date).toLocaleDateString(t("local_date_format", "en-US"), {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : t("unset", "Unset")
+
+  const limitCategoryName = (name: string, maxWords = 15): string => {
+    const words = name.split(" ")
+    if (words.length <= maxWords) return name
+    return words.slice(0, maxWords).join(" ") + "..."
+  }
 
   const icon: React.ReactNode =
     transaction.type === "income" ? (
       <FaMoneyBillWave className="text-white" />
     ) : (
-      categoryIcons[transaction.category || ""] || (
-        <FaQuestion className="text-white" />
-      )
-    );
+      categoryIcons[transaction.category || ""] || <FaUtensils className="text-white" />
+    )
 
   const bgColor =
-    transaction.type === "income"
-      ? "bg-emerald-600"
-      : categoryColors[transaction.category || ""] || "bg-gray-400";
+    transaction.type === "income" ? "bg-emerald-600" : categoryColors[transaction.category || ""] || "bg-gray-400"
 
   return (
     <div
-      className={`group relative scale-99 rounded-xl cursor-pointer border 
-      border-gray-300  bg-gray-100 dark:border-gray-700 dark:bg-gray-800  dark:shadow-emerald-950 shadow-sm
-      p-4  transition-transform duration-200 
-      hover:scale-100 hover:shadow-md 
-      ${view === "list" && isWideViewPort() ? "h-24" : "h-auto"}`}
+      className={`group relative mb-2 scale-99 cursor-pointer rounded-xl border border-gray-300 bg-gray-100 px-4 py-3 shadow-sm backdrop-blur-sm transition-transform duration-200 hover:scale-100 hover:shadow-md hover:before:opacity-100 dark:border-gray-600/55 dark:bg-gray-800 ${
+        view === "list" ? "h-20" : "h-auto"
+      }`}
     >
       {/* Badge icon */}
       <div
@@ -102,83 +98,143 @@ export default function TransactionCard({
       </div>
 
       {/* Main content */}
-      <div className="flex justify-between items-start">
-        <div
-          className={
-            view === "list" && isWideViewPort() ? "flex flex-col justify-between ml-12" : ""
-          }
-        >
-          {/* Name & Amount */}
-          <div className="flex items-center justify-between mt-5 space-x-4 w-fit">
-            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+      {view === "list" ? (
+        <div className="grid grid-cols-12 gap-2 items-center ml-12">
+          {/* Colonne Nom - 3 colonnes */}
+          <div className="col-span-3 flex items-center gap-1">
+            <h2 className="text-sm sm:text-base font-semibold leading-tight text-gray-900 dark:text-gray-100 capitalize truncate">
               {formatName(transaction.name)}
             </h2>
-            <p
-              className={`text-lg font-bold ${transaction.type === "expense"
-                ? "text-red-600"
-                : "text-green-600"
-                }`}
-            >
-              {transaction.type === "expense" ? "-" : "+"}
-              {formatCurrency(transaction.amount, currency, true)}
-            </p>
             {transaction.is_recurrent && (
-              <i className="bx bx-rotate-right text-xl text-gray-500 dark:text-gray-400" />
+              <FaSyncAlt className="text-gray-400 text-xs" />
             )}
           </div>
 
-          {/* Category / Source & Date */}
-          <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
-            <span>
-              {formatName( transaction.type === "expense"
-                ? transaction.category || "Uncategorized"
-                : transaction.source || "Unknown")}
+          {/* Colonne Catégorie - 3 colonnes */}
+          <div className="col-span-3">
+            <span className="inline-block rounded-lg bg-gray-300 px-2 sm:px-3 py-1 sm:py-1.5 font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300 text-xs sm:text-sm truncate max-w-full">
+              {limitCategoryName(
+                formatName(
+                  transaction.type === "expense"
+                    ? transaction.category || "Uncategorized"
+                    : transaction.source || "Unknown",
+                ),
+              )}
             </span>
-            <span className="text-gray-400 dark:text-gray-500">
-              {formattedDate}
-            </span>
-            {transaction.start_date && (
-              <>
-                <span>-</span>
-                <span className="text-gray-400 dark:text-gray-500">
-                  {formattedEndDate}
-                </span>
-              </>
-            )}
           </div>
-        </div>
 
-        {/* Action buttons */}
-        <div className="flex justify-center items-start gap-2">
-          {transaction.receipt_id && (<button
-            onClick={actions?.onDownload}
-            className='flex items-center justify-center p-2 text-white bg-blue-500 rounded transition hover:bg-blue-600 active:scale-95'>
+          {/* Colonne Date - 2 colonnes */}
+          <div className="col-span-2">
+            <div className="flex flex-col items-start">
+              <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{formattedDate}</span>
+              {transaction.start_date && (
+                <span className="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">{formattedEndDate}</span>
+              )}
+            </div>
+          </div>
 
-            <FaFileDownload />
-          </button>)}
-          <div
-            className={`flex ${view === "grid" || !isWideViewPort() ? "flex-col space-y-2" : "flex-row space-x-3"
-              } items-center`}
-          >
+          {/* Colonne Montant - 2 colonnes */}
+          <div className="col-span-2 text-right">
+            <div className="flex items-center justify-end gap-x-1">
+              <p
+                className={`text-base sm:text-lg font-bold tracking-tight whitespace-nowrap ${
+                  transaction.type === "expense"
+                    ? "text-red-600 dark:text-red-500/75"
+                    : "text-emerald-600 dark:text-emerald-400"
+                }`}
+              >
+                {transaction.type === "expense" ? "-" : "+"}
+                {formatCurrency(transaction.amount, currency, true)}
+              </p>
+            </div>
+          </div>
+
+          {/* Colonne Actions - 2 colonnes */}
+          <div className="col-span-2 flex items-center justify-end gap-x-1 sm:gap-x-2">
+            {transaction.receipt_id && (
+              <button
+                onClick={actions?.onDownload}
+                className="group/btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md bg-blue-600 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-blue-700 hover:shadow-lg active:scale-95"
+              >
+                <FaFileDownload className="text-xs sm:text-sm transition-transform duration-200 group-hover/btn:scale-110" />
+              </button>
+            )}
             <button
-              className={`flex items-center justify-center gap-2 rounded 
-              bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 
-              p-2 transition hover:bg-gray-400 dark:hover:bg-gray-500 active:scale-95`}
               onClick={actions?.onChange}
+              className="group/btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md bg-gray-300 text-gray-900 transition-all duration-200 hover:scale-105 hover:bg-gray-300 hover:shadow-lg active:scale-95 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
             >
-              <FaExchangeAlt />
+              <FaExchangeAlt className="text-xs sm:text-sm transition-transform duration-200 group-hover/btn:scale-110" />
             </button>
-
             <button
-              className={`flex items-center justify-center gap-2 rounded 
-              bg-red-600 text-white p-2 transition hover:bg-red-700 active:scale-95`}
               onClick={actions?.onDelete}
+              className="group/btn flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md bg-red-700/90 text-gray-100 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95"
             >
-              <FaTrash />
+              <FaTrash className="text-xs sm:text-sm transition-transform duration-200 group-hover/btn:scale-110" />
             </button>
           </div>
         </div>
-      </div>
-    </div >
-  );
+      ) : (
+        // Mode grid : structure originale conservée
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col space-y-2">
+            <div className="mt-4 flex w-fit items-center justify-between space-x-4 capitalize">
+              <h2 className="pl-1.5 text-lg leading-tight font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-1">
+                {formatName(transaction.name)}
+                {transaction.is_recurrent && (
+                  <FaSyncAlt className="text-gray-400 text-sm" /> 
+                )}
+              </h2>
+              <p
+                className={`text-xl font-bold tracking-tight ${
+                  transaction.type === "expense"
+                    ? "text-red-600 dark:text-red-500/75"
+                    : "text-emerald-600 dark:text-emerald-400"
+                }`}
+              >
+                {transaction.type === "expense" ? "-" : "+"}
+                {formatCurrency(transaction.amount, currency, true)}
+              </p>
+            </div>
+            <div className="mt-1 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+              <span className="inline-block rounded-lg bg-gray-300 px-3 py-1.5 font-medium text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                {limitCategoryName(
+                  formatName(
+                    transaction.type === "expense"
+                      ? transaction.category || "Uncategorized"
+                      : transaction.source || "Unknown",
+                  ),
+                )}
+              </span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">{formattedDate}</span>
+              {transaction.start_date && <span className="text-xs">{formattedEndDate}</span>}
+            </div>
+          </div>
+          <div className="relative mt-2 ml-4 flex min-h-full space-x-2">
+            {transaction.receipt_id && (
+              <button
+                onClick={actions?.onDownload}
+                className="group/btn absolute top-0 -left-10 flex h-8 w-8 items-center justify-center rounded-md bg-blue-600 text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-blue-700 hover:shadow-lg active:scale-95"
+              >
+                <FaFileDownload className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
+              </button>
+            )}
+            <div className="flex flex-col items-center space-y-2">
+              <button
+                onClick={actions?.onChange}
+                className="group/btn flex h-8 w-8 items-center justify-center rounded-md bg-gray-300 text-gray-900 transition-all duration-200 hover:scale-105 hover:bg-gray-300 hover:shadow-lg active:scale-95 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+              >
+                <FaExchangeAlt className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
+              </button>
+              <button
+                onClick={actions?.onDelete}
+                className="group/btn flex h-8 w-8 items-center justify-center rounded-md bg-red-700/90 text-gray-100 shadow-sm transition-all duration-200 hover:scale-105 hover:bg-red-700 hover:shadow-lg active:scale-95"
+              >
+                <FaTrash className="text-sm transition-transform duration-200 group-hover/btn:scale-110" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }

@@ -222,7 +222,7 @@ export default function BarChart({ chartValueOptions }: any) {
     }
 
     return (
-        <div className="w-[45vw] self-center aspect-video max-h-fit  max-w-[720px] cursor-pointer">
+        <div className="md:w-[45vw] w-full self-center aspect-video max-h-fit max-w-[720px] cursor-pointer">
             {chartData && <Bar data={chartData} options={chartOptions} />}
         </div>
     );

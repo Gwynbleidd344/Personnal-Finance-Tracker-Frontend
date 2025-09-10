@@ -27,7 +27,7 @@ export default function CategoryItem({ category, onRename, onDelete }: Props) {
     return (
         <motion.div
             key={category.id}
-            className="w-full px-6 py-4 rounded-xl shadow-sm flex justify-between bg-gray-50 hover:bg-gray-100 transition-colors text-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100"
+            className="w-full px-4 sm:px-6 py-4 rounded-xl shadow-sm h-fit flex justify-between bg-gray-50 hover:bg-gray-100 transition-colors text-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-100"
             layout
             whileHover={{ scale: 0.995 }}
             initial={{ opacity: 0, scale: 0.95 }}

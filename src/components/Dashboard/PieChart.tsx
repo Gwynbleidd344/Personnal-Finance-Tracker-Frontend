@@ -116,7 +116,7 @@ export const PieChart = ({ chartValueOptions }: any) => {
     }
 
     return (
-        <div className="w-[25vw] h-[25vw] -mt-8 cursor-pointer ">
+        <div className="md:w-[25vw] max-w-[400px] w-full aspect-square -mt-8 cursor-pointer ">
             {chartData && <Doughnut options={options} data={chartData} />}
         </div>
     );
