@@ -159,7 +159,7 @@ export default function Categories() {
                     </h3>
                 </div>
 
-                <div className="w-full flex flex-col gap-3  h-full max-h-[calc(100vh-200px)]">
+                <div className="w-full flex flex-col gap-4  h-full max-h-[calc(100vh-200px)]">
                     <SearchPanel
                         onSearch={(value: string) => setSearchFilter(value)}
                         onClear={() => setSearchFilter("")}
