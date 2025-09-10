@@ -100,7 +100,7 @@ export default function TransactionCard({ transaction, view, actions }: Transact
       </div>
 
       {/* Main content */}
-      {(view === "list" && width > 500) ? (
+      {(view === "list" && width >= 768) ? (
         <div className="grid grid-cols-12 gap-2 items-center ml-12">
           {/* Colonne Nom - 3 colonnes */}
           <div className="col-span-3 flex items-center gap-1">
