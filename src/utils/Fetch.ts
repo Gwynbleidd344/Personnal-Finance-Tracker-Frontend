@@ -7,8 +7,9 @@ export const fetchCategories = async (
 ): Promise<Category[]> => {
   if (!token) return [];
   try {
-    const res = await fetch('http://localhost:8080/api/categories', {
-      headers: { Authorization: `Bearer ${token}` },
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/categories`, {
+      mode: 'cors', credentials: 'include',
+      headers: { Authorization: `${token}` },
     });
     const data = await res.json();
     const cats: Category[] = Array.isArray(data) ? data : [];
@@ -30,25 +31,26 @@ export const fetchExpenses = async (
 ) => {
   if (!token) return;
   try {
-    const res = await fetch('http://localhost:8080/api/expenses', {
-      headers: { Authorization: `Bearer ${token}` },
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses`, {
+      mode: 'cors', credentials: 'include',
+      headers: { Authorization: `${token}` },
     });
     const data = await res.json();
 
     const formatted: Transaction[] = Array.isArray(data)
       ? data.map((item: any) => ({
-          id: item.id,
-          name: item.description || item.name,
-          amount: parseFloat(item.amount),
-          date: item.date || null,
-          start_date: item.start_date || null,
-          end_date: item.end_date || null,
-          is_recurrent: item.is_recurrent ?? false,
-          type: item.is_income ? 'income' : 'expense',
-          category: item.category_fk?.name || t('uncategorized', 'Uncategorized'),
-          source: item.source || '',
-          income_date: item.income_date || null, 
-        }))
+        id: item.id,
+        name: item.description || item.name,
+        amount: parseFloat(item.amount),
+        date: item.date || null,
+        start_date: item.start_date || null,
+        end_date: item.end_date || null,
+        is_recurrent: item.is_recurrent ?? false,
+        type: item.is_income ? 'income' : 'expense',
+        category: item.category_fk?.name || t('uncategorized', 'Uncategorized'),
+        source: item.source || '',
+        income_date: item.income_date || null,
+      }))
       : [];
 
     setTransactions(formatted);

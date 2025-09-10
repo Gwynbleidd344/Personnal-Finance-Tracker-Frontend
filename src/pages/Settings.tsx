@@ -7,6 +7,8 @@ import ThemeToggle from '../components/UI/ThemeToggle';
 import CurrencySettings from '../components/Settings/CurrencySettings';
 import DeleteData from "../components/Settings/DeleteData.tsx";
 import DeleteAccount from '../components/Settings/DeleteAccount.tsx';
+import { getAccessToken } from '../utils/getCookiesToken.ts';
+import SessionExpiryBox from '../components/UI/SessionExpiryBox.tsx';
 
 export default function Settings() {
     const [isChangePasswordOpen, setIsChangePasswordOpen] =
@@ -16,15 +18,20 @@ export default function Settings() {
 
     const { t } = useTranslation();
     const [userSummary, setUserSummary] = useState<{ email: string, createdAt: string }>({ createdAt: '', email: '' });
+    const token = getAccessToken()
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL}/api/user/profile`, { headers: { "Authorization": "Bearer " + localStorage.getItem("accessToken") } })
+        fetch(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
+            mode: 'cors', credentials: 'include',
+            headers: { Authorization: `${token}` },
+        })
             .then(async res => setUserSummary(await res.json()))
             .catch(rej => console.log(rej.message));
     }, []);
 
     return (
         <div className="mx-auto lg:h-[96vh] h-[calc(96vh-120px)] overflow-y-scroll dark:border-2 dark:border-gray-800 rounded-lg bg-gray-100 dark:bg-gray-900 p-8 shadow-md">
+            <SessionExpiryBox />
             <h1 className="mb-6 border-b border-gray-300 dark:border-gray-700 pb-4 text-3xl font-bold text-gray-800 dark:text-gray-100">
                 {t('settings_title', 'Settings')}
             </h1>

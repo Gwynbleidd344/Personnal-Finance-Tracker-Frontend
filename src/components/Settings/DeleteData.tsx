@@ -1,6 +1,7 @@
 import { FaTrash } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { getAccessToken } from "../../utils/getCookiesToken";
 
 export default function DeleteData() {
   const { t } = useTranslation();
@@ -12,7 +13,7 @@ export default function DeleteData() {
   };
 
   const confirmDelete = async () => {
-    const token = localStorage.getItem("accessToken");
+    const token = getAccessToken();
     if (!token) return;
 
     setIsConfirmOpen(false);
@@ -21,8 +22,9 @@ export default function DeleteData() {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/user/delete-data`,
         {
+          mode: 'cors', credentials: 'include',
+          headers: { Authorization: `${token}` },
           method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
         }
       );
 

@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 
 import Layout from './components/Layout';
-import Expense from './components/Transaction/Expense.tsx';
+import Expense from './components/Transaction/Expense/Expense.tsx';
 import './i18n';
 import Categories from './pages/Categories.tsx';
 import Dashboard from './pages/Dashboard';
@@ -17,7 +17,7 @@ import LogIn from './pages/LogIn';
 import Settings from './pages/Settings.tsx';
 import SignUp from './pages/SignUp';
 import Support from './pages/Support.tsx';
-import Income from './components/Transaction/Income.tsx';
+import Income from './components/Transaction/Income/Income.tsx';
 import { CurrencyProvider } from './context/CurrencyContext.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 

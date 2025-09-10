@@ -1,18 +1,20 @@
 import { FaSun, FaMoon } from "react-icons/fa";
 import useDarkMode from "../../hooks/useDarkMode";
+import { useTranslation } from "react-i18next";
 
 export default function ThemeToggle() {
   const [darkMode, setDarkMode] = useDarkMode();
+  const { t } = useTranslation()
 
   const toggleTheme = () => setDarkMode(!darkMode);
 
   return (
     <div>
       <h2 className="font-semibold text-xl mt-6 text-black dark:text-gray-100 mb-2">
-        Change Theme
+        {t("change_theme", "Change Theme")}
       </h2>
       <p className="text-gray-600 dark:text-gray-400 mb-6">
-        Choose the theme you prefer between Light and Dark mode.
+        {t("choose_your_theme", "Choose the theme you prefer between Light and Dark mode")}.
       </p>
 
       <div className="relative w-[90px] h-[40px]">

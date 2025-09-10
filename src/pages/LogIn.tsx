@@ -2,8 +2,6 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 
-import applelogo from '../assets/Apple.svg';
-
 import googleLogo from '../assets/Google.png';
 import { FaUser, FaLock } from 'react-icons/fa';
 import ErrorMessage from '../components/UI/ErrorMessage.tsx';
@@ -26,6 +24,7 @@ export default function LogIn() {
             setLoading(true);
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
                 method: 'POST',
+                mode: 'cors', credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, rememberMe }),
             });
@@ -39,7 +38,6 @@ export default function LogIn() {
             }
 
             if (res.ok) {
-                localStorage.setItem('accessToken', data.accessToken);
                 navigate('/dashboard');
             } else {
                 setError(data.message || 'Erreur inconnue');
@@ -58,6 +56,7 @@ export default function LogIn() {
                 setLoading(true);
                 const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
                     method: 'POST',
+                    mode: 'cors', credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ access_token: tokenResponse.access_token }),
                 });
@@ -71,7 +70,6 @@ export default function LogIn() {
                 }
 
                 if (res.ok) {
-                    localStorage.setItem('accessToken', data.accessToken);
                     navigate('/dashboard');
                 } else {
                     setError(data.message || 'Erreur inconnue');
@@ -226,24 +224,13 @@ export default function LogIn() {
 
                         <button
                             onClick={() => googleLogin()}
-                            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-2 font-semibold text-black transition hover:bg-blue-50 cursor-pointer">
+                            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-2 font-semibold text-black transition hover:bg-gray-200 cursor-pointer">
                             <img
                                 src={googleLogo}
                                 alt="Google Logo"
                                 className="h-5 w-5"
                             />
                             {t('google', 'Google')}
-                        </button>
-
-
-                        <button className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-2 font-semibold text-black transition hover:bg-gray-200">
-                            <img
-                                src={applelogo}
-                                alt="Apple Logo"
-                                className="h-5 w-4"
-
-                            />
-                            {t('apple', 'Apple')}
                         </button>
                     </div>
                 </div>

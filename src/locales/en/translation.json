@@ -85,8 +85,8 @@
     "filter_by_category": "Filter by Category",
     "close": "Close",
     "expense": "Expense",
-
     "change_theme": "Change Theme",
+    "choose_your_theme": "Choose the theme you prefer between Light and Dark mode",
     "start_date": "Start date",
     "end_date": "End date",
     "category": "Category",
@@ -109,5 +109,9 @@
     "account_delete_success": "Account deleted. You will be logged out.",
     "account_delete_confirm_message": "Are you really sure to permanently delete your account ? All data will be unrecoverable",
     "account_confirm_delete": "Permanently delete account",
-    "expense_confirm_delete": "Are you sure to delete this expense ?"
+    "expense_confirm_delete": "Are you sure to delete this expense ?",
+    "refresh_error_with_token": "Failed to refresh. Logging out",
+    "refresh_error_no_token": "No refresh token. Logging out",
+    "session_expired": "Session expired",
+    "refresh": "Refresh"
 }

@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 import CategoryList from "../components/Categories/CategoryList";
 import CategoryModal from "../components/Categories/CategoryModal";
 import SearchPanel from "../components/Categories/SearchPanel";
-import useWindowDimensions from "../hooks/useWindowDimensions";
+import { getAccessToken } from "../utils/getCookiesToken";
+import SessionExpiryBox from "../components/UI/SessionExpiryBox";
 
 type Category = {
     id: string;
@@ -19,10 +20,8 @@ type Message = {
 };
 
 export default function Categories() {
-    const token = localStorage.getItem("accessToken");
     const { t } = useTranslation();
-    const { width } = useWindowDimensions()
-    const isWideViewPort = () => width > 1024
+    const token = getAccessToken()
 
     const [categoryReload, setCategoryReload] = useState<boolean>(false);
     const [categoryList, setCategoryList] = useState<Array<Category> | null>(
@@ -45,7 +44,8 @@ export default function Categories() {
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_API_URL}/api/categories/`, {
-            headers: { Authorization: "Bearer " + token },
+            mode: 'cors', credentials: 'include',
+            headers: { Authorization: `${token}` },
         })
             .then(async (res) => {
                 return await res.json().then((res) => {
@@ -79,10 +79,11 @@ export default function Categories() {
             return;
         }
         fetch(`${import.meta.env.VITE_API_URL}/api/categories/`, {
+            mode: 'cors', credentials: 'include',
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer " + token,
+                Authorization: `${token}`
             },
             body: JSON.stringify({ name: categoryName }),
         })
@@ -103,9 +104,10 @@ export default function Categories() {
         }
         fetch(`${import.meta.env.VITE_API_URL}/api/categories/${categoryId}`, {
             method: "PUT",
+            mode: 'cors', credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer " + token,
+                Authorization: `${token}`
             },
             body: JSON.stringify({ name: categoryName }),
         })
@@ -118,8 +120,9 @@ export default function Categories() {
         fetch(
             `${import.meta.env.VITE_API_URL}/api/categories/${categoryId}?force=${force}`,
             {
+                mode: 'cors', credentials: 'include',
+                headers: { Authorization: `${token}` },
                 method: "DELETE",
-                headers: { Authorization: "Bearer " + token },
             }
         )
             .then(async (res) => await handleNotification(res))
@@ -137,6 +140,7 @@ export default function Categories() {
 
     return (
         <>
+            <SessionExpiryBox />
             <AnimatePresence>
                 {notificationMessage ? (
                     <ErrorMessage
@@ -148,14 +152,14 @@ export default function Categories() {
                 ) : null}
             </AnimatePresence>
 
-            <div className={`${isWideViewPort() ? "h-[96vh]" : "h-[calc(96vh-100px)] overflow-hidden"} w-full p-5 bg-gray-100 dark:border-2 dark:border-gray-800 dark:bg-gray-900 rounded-lg`}>
+            <div className={`lg:h-[96vh] h-[calc(96vh-120px)] w-full p-5 bg-gray-100 dark:border-2 dark:border-gray-800 dark:bg-gray-900 rounded-lg`}>
                 <div className="flex justify-between items-center mb-6 border-b border-gray-300 dark:border-gray-700">
                     <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100 p-2 mb-3">
                         {t('categories_title', 'Categories')}
                     </h3>
                 </div>
 
-                <div className="w-full flex flex-col gap-3  h-full max-h-[calc(100vh-200px)]">
+                <div className="w-full flex flex-col gap-4  h-full max-h-[calc(100vh-200px)]">
                     <SearchPanel
                         onSearch={(value: string) => setSearchFilter(value)}
                         onClear={() => setSearchFilter("")}

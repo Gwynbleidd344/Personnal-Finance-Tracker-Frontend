@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { CurrencyContext } from "../../context/CurrencyContext";
 import { formatCurrency } from "../../utils/currency";
 import useDarkMode from "../../hooks/useDarkMode";
+import { getAccessToken } from "../../utils/getCookiesToken";
 
 ChartJS.register(Tooltip, Legend, ArcElement);
 
@@ -15,6 +16,7 @@ export const PieChart = ({ chartValueOptions }: any) => {
     const [error, setError] = useState<string | null>(null);
     const { currency } = useContext(CurrencyContext);
     const [darkMode] = useDarkMode();
+    const token = getAccessToken()
 
     const options = {
         responsive: true,
@@ -40,7 +42,8 @@ export const PieChart = ({ chartValueOptions }: any) => {
     async function getExpensesOverTime(start: Date, end: Date, category?: string, type?: "one-time" | "recurring") {
         try {
             return await fetch(`${import.meta.env.VITE_API_URL}/api/expenses?start=${start.toISOString().split('T')[0]}&end=${end.toISOString().split('T')[0]}&category=${category}&type=${type || ''}`, {
-                headers: { Authorization: "Bearer " + localStorage.getItem('accessToken') }
+                mode: 'cors', credentials: 'include',
+                headers: { Authorization: `${token}` },
             })
                 .then(async res => await res.json())
                 .catch(rej => console.log(rej.message))
@@ -116,7 +119,7 @@ export const PieChart = ({ chartValueOptions }: any) => {
     }
 
     return (
-        <div className="w-[25vw] h-[25vw] -mt-8 cursor-pointer ">
+        <div className="md:w-[25vw] max-w-[400px] w-full aspect-square -mt-8 cursor-pointer ">
             {chartData && <Doughnut options={options} data={chartData} />}
         </div>
     );

@@ -2,6 +2,7 @@ import { FaTrash } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getAccessToken } from "../../utils/getCookiesToken";
 
 export default function DeleteAccount() {
   const { t } = useTranslation();
@@ -14,7 +15,7 @@ export default function DeleteAccount() {
   };
 
   const confirmDelete = async () => {
-    const token = localStorage.getItem("accessToken");
+    const token = getAccessToken();
     if (!token) return;
 
     setIsConfirmOpen(false);
@@ -23,8 +24,9 @@ export default function DeleteAccount() {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/user/deleteAccount`,
         {
+          mode: 'cors', credentials: 'include',
+          headers: { Authorization: `${token}` },
           method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
         }
       );
 

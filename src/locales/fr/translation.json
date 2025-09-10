@@ -86,6 +86,7 @@
     "search": "Rechercher",
     "expense": "Dépense",
     "change_theme": "Changer le thème",
+    "choose_your_theme": "Choisissez un thème entre Clair et Sombre",
     "start_date": "Date de début",
     "end_date": "Date de fin",
     "category": "Catégorie",
@@ -108,5 +109,9 @@
     "expense_confirm_delete": "Êtes-vous sûr de supprimer cette dépense ?",
     "general_account_informations": "Informations génerales du compte",
     "join_date": "Date de création",
-    "local_date_format": "fr-FR"
+    "local_date_format": "fr-FR",
+    "refresh_error_with_token": "Impossible de rafraîchir. Déconnexion",
+    "refresh_error_no_token": "Token manquant. Déconnexion",
+    "session_expired": "Session éxpirée",
+    "refresh": "Rafraîchir"
 }

@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import BarChart from '../components/Dashboard/BarChart.tsx';
 import ExpenseFilter from '../components/UI/ExpenseFilter.tsx';
-import useWindowDimensions from '../hooks/useWindowDimensions.ts';
 import AiAdvice from '../components/Dashboard/AiAdvice.tsx';
+import { getAccessToken } from '../utils/getCookiesToken.ts';
+import SessionExpiryBox from '../components/UI/SessionExpiryBox.tsx';
 
 type MonthlySummaryType = {
     year: number
@@ -18,9 +19,7 @@ type MonthlySummaryType = {
 }
 
 export default function Dashboard() {
-    const token = localStorage.getItem('accessToken')
-    const { width } = useWindowDimensions()
-    const isWideViewPort = () => width > 1024
+    const token = getAccessToken()
 
     const { t } = useTranslation();
     const [monthlySummary, setMonthlySummary] = useState<MonthlySummaryType | null>(null)
@@ -35,9 +34,10 @@ export default function Dashboard() {
 
     function getMonthlySummary(month: string) {
         try {
-            fetch(`${import.meta.env.VITE_API_URL}/api/summary/monthly?month=` + month,
-                { headers: { Authorization: "Bearer " + token } }
-            )
+            fetch(`${import.meta.env.VITE_API_URL}/api/summary/monthly?month=` + month, {
+                mode: 'cors', credentials: 'include',
+                headers: { Authorization: `${token}` },
+            })
                 .then(res => res.json())
                 .then(res => setMonthlySummary(res))
                 .catch(rej => console.log(rej.message))
@@ -48,9 +48,10 @@ export default function Dashboard() {
 
     function checkMonthBalance() {
         try {
-            fetch(`${import.meta.env.VITE_API_URL}/api/summary/alerts`,
-                { headers: { Authorization: "Bearer " + token } }
-            )
+            fetch(`${import.meta.env.VITE_API_URL}/api/summary/alerts`, {
+                mode: 'cors', credentials: 'include',
+                headers: { Authorization: `${token}` },
+            })
                 .then(res => res.json())
                 .then(res => setBalaceAlert(res))
                 .catch(rej => console.log(rej.message))
@@ -63,7 +64,8 @@ export default function Dashboard() {
         if (!token) return [];
         try {
             const res = await fetch(`${import.meta.env.VITE_API_URL}/api/categories`, {
-                headers: { Authorization: `Bearer ${token}` },
+                mode: 'cors', credentials: 'include',
+                headers: { Authorization: `${token}` },
             });
             const data = await res.json();
             const cats: any[] = Array.isArray(data) ? data : [];
@@ -85,7 +87,8 @@ export default function Dashboard() {
 
     return (
         <section className={'flex h-full'}>
-            <div className={`${isWideViewPort() ? "h-[96vh]" : "h-[calc(96vh-120px)]"} w-full rounded-lg bg-gray-100 dark:bg-gray-900 dark:border-2 dark:border-gray-800 p-5 overflow-y-scroll overflow-x-hidden dark:text-white`}>
+            <SessionExpiryBox />
+            <div className={`lg:h-[96vh] h-[calc(96vh-120px)] w-full rounded-lg bg-gray-100 dark:bg-gray-900 dark:border-2 dark:border-gray-800 p-5 overflow-y-scroll overflow-x-hidden dark:text-white`}>
                 <div className="flex justify-between border-b border-gray-300 dark:border-gray-500 items-center mb-5">
                     <h1 className="text-3xl font-bold p-2 mb-3">
                         {t("dashboard_title", "Dashboard")}
@@ -125,7 +128,7 @@ export default function Dashboard() {
                 />
                 <div className={`flex flex-col m-5`}>
                     <h1 className={`text-2xl font-semibold`}>{t('expenses_categories', 'Expenses Categories')}</h1>
-                    <div className="flex flex-row max-w-[1200px] w-full gap-6 items-start mt-5">
+                    <div className="flex md:flex-row flex-col items-center max-w-[1200px] w-full gap-6 md:items-start mt-5">
                         <PieChart chartValueOptions={chartOptions} />
                         <BarChart chartValueOptions={chartOptions} />
                     </div>
