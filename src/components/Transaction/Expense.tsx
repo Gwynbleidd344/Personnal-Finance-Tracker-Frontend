@@ -9,6 +9,7 @@ import Input from './searchButton.tsx';
 import TransactionCard from './TransactionCard';
 import type { Category, Transaction } from './Types';
 import { getAccessToken } from '../../utils/getCookiesToken.ts';
+import SessionExpiryBox from '../UI/SessionExpiryBox.tsx';
 
 type ChartOptions = {
     start: Date;
@@ -281,6 +282,7 @@ export default function Expense() {
 
     return (
         <div className="z-50 flex lg:h-[96vh] h-[calc(96vh-120px)] w-full flex-col items-center rounded-lg bg-gray-100 dark:border-2 dark:border-gray-800 dark:bg-gray-900">
+            <SessionExpiryBox />
             <div className="flex min-h-full w-full flex-col rounded-2xl">
                 {/* Header */}
                 <div className="flex flex-col border-gray-300 px-5 pt-5 text-3xl font-bold md:flex-row md:items-center md:justify-between">
