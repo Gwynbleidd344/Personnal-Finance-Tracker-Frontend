@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import BarChart from '../components/Dashboard/BarChart.tsx';
 import ExpenseFilter from '../components/UI/ExpenseFilter.tsx';
-import useWindowDimensions from '../hooks/useWindowDimensions.ts';
 import AiAdvice from '../components/Dashboard/AiAdvice.tsx';
 import { getAccessToken } from '../utils/getCookiesToken.ts';
 
@@ -20,8 +19,6 @@ type MonthlySummaryType = {
 
 export default function Dashboard() {
     const token = getAccessToken()
-    const { width } = useWindowDimensions()
-    const isWideViewPort = () => width > 1024
 
     const { t } = useTranslation();
     const [monthlySummary, setMonthlySummary] = useState<MonthlySummaryType | null>(null)
@@ -89,7 +86,7 @@ export default function Dashboard() {
 
     return (
         <section className={'flex h-full'}>
-            <div className={`${isWideViewPort() ? "h-[96vh]" : "h-[calc(96vh-120px)]"} w-full rounded-lg bg-gray-100 dark:bg-gray-900 dark:border-2 dark:border-gray-800 p-5 overflow-y-scroll overflow-x-hidden dark:text-white`}>
+            <div className={`lg:h-[96vh] h-[calc(96vh-120px)] w-full rounded-lg bg-gray-100 dark:bg-gray-900 dark:border-2 dark:border-gray-800 p-5 overflow-y-scroll overflow-x-hidden dark:text-white`}>
                 <div className="flex justify-between border-b border-gray-300 dark:border-gray-500 items-center mb-5">
                     <h1 className="text-3xl font-bold p-2 mb-3">
                         {t("dashboard_title", "Dashboard")}
@@ -129,7 +126,7 @@ export default function Dashboard() {
                 />
                 <div className={`flex flex-col m-5`}>
                     <h1 className={`text-2xl font-semibold`}>{t('expenses_categories', 'Expenses Categories')}</h1>
-                    <div className="flex flex-row max-w-[1200px] w-full gap-6 items-start mt-5">
+                    <div className="flex md:flex-row flex-col items-center max-w-[1200px] w-full gap-6 md:items-start mt-5">
                         <PieChart chartValueOptions={chartOptions} />
                         <BarChart chartValueOptions={chartOptions} />
                     </div>
