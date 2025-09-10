@@ -8,7 +8,6 @@ import ExpenseFilter from '../UI/ExpenseFilter.tsx';
 import Input from './searchButton.tsx';
 import TransactionCard from './TransactionCard';
 import type { Category, Transaction } from './Types';
-import useWindowDimensions from '../../hooks/useWindowDimensions.ts';
 
 type ChartOptions = {
     start: Date;
@@ -24,8 +23,6 @@ export default function Expense() {
             (localStorage.getItem('transactionView') as 'grid' | 'list') ||
             'grid',
     );
-    const { width } = useWindowDimensions()
-    const isWideViewPort = () => width > 1024
     const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false)
 
     const toggleView = () => {
@@ -278,16 +275,16 @@ export default function Expense() {
     };
 
     return (
-        <div className="z-50 flex h-[96vh] w-full flex-col items-center rounded-lg bg-gray-100 dark:border-2 dark:border-gray-800 dark:bg-gray-900">
+        <div className="z-50 flex lg:h-[96vh] h-[calc(96vh-120px)] w-full flex-col items-center rounded-lg bg-gray-100 dark:border-2 dark:border-gray-800 dark:bg-gray-900">
             <div className="flex min-h-full w-full flex-col rounded-2xl">
                 {/* Header */}
                 <div className="flex flex-col border-gray-300 px-5 pt-5 text-3xl font-bold md:flex-row md:items-center md:justify-between">
-                    <div className=" flex items-center w-full justify-between border-b border-gray-300 dark:border-gray-700">
-                    <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100 p-2 mb-3">
+                    <div className=" flex flex-col md:flex-row md:items-center w-full justify-between border-b border-gray-300 dark:border-gray-700">
+                        <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100 p-2 mb-3">
                             {t('expenses', 'Expenses')}
                         </h3>
 
-                        <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-2">
+                        <div className="flex flex-row md:flex-row md:items-center space-y-2 md:space-y-0 space-x-2">
                             {/* Add button */}
                             <button
                                 onClick={() => setIsModalOpen(true)}
@@ -310,7 +307,7 @@ export default function Expense() {
                             <div className="flex space-x-2">
                                 <button
                                     onClick={toggleView}
-                                    className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-gray-200 text-gray-800 transition hover:bg-gray-300 active:scale-95"
+                                    className="hidden md:flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-gray-200 text-gray-800 transition hover:bg-gray-300 active:scale-95"
                                 >
                                     {view === 'grid' ? (
                                         <FaList />
@@ -318,19 +315,17 @@ export default function Expense() {
                                         <FaThLarge />
                                     )}
                                 </button>
+                                <button
+                                    onClick={() => setIsFilterVisible(!isFilterVisible)}
+                                    className="flex md:hidden h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-gray-200 text-gray-800 transition hover:bg-gray-300 active:scale-95"
+                                >
+                                    <FaFilter />
+                                </button>
                             </div>
-                        </div>
-                        <div className="flex space-x-2 lg:hidden">
-                            <button
-                                onClick={() => setIsFilterVisible(!isFilterVisible)}
-                                className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-gray-200 text-gray-800 transition hover:bg-gray-300 active:scale-95"
-                            >
-                                <FaFilter />
-                            </button>
                         </div>
                     </div>
                 </div>
-                <div className="px-4 pb-2.5">
+                <div className={`${isFilterVisible ? "" : "hidden"} px-4 pb-2.5`}>
                     <ExpenseFilter
                         chartOptions={chartOptions}
                         setChartOptions={setChartOptions}
@@ -342,11 +337,10 @@ export default function Expense() {
                 <AnimatePresence>
                     <motion.div
                         layout
-                        className={`mt-2 w-full overflow-y-auto px-4 pt-3 ${
-                            view === 'grid'
-                                ? 'grid grid-cols-1 gap-3  sm:grid-cols-2 lg:grid-cols-3'
+                        className={`mt-2 w-full overflow-y-auto px-4 pt-3 ${view === 'grid'
+                                ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3'
                                 : 'flex flex-col space-y-4'
-                        }`}
+                            }`}
                         style={{ maxHeight: 'calc(100vh - 220px)' }}
                     >
                         {filteredTransactions.map((t) => (
@@ -389,7 +383,7 @@ export default function Expense() {
                             exit={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ duration: 0.15 }}
-                            className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg"
+                            className="w-full max-sm:mx-2 max-w-md rounded-xl bg-white p-6 shadow-lg"
                         >
                             <h2 className="mb-3 text-2xl font-bold">
                                 {editingId
@@ -412,27 +406,27 @@ export default function Expense() {
                                         'description',
                                         'Description',
                                     )}
-                                    className="rounded-lg border border-gray-300 p-3 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                    className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                                     required
                                 />
                                 <input
                                     name="amount"
                                     type="number"
                                     placeholder={t('amount', 'Amount')}
-                                    className="rounded-lg border border-gray-300 p-3 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                    className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                                     required
                                 />
                                 <input
                                     name="date"
                                     type="datetime-local"
-                                    className="rounded-lg border border-gray-300 p-3 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                    className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                                     defaultValue={new Date()
                                         .toISOString()
                                         .slice(0, 16)}
                                 />
                                 <select
                                     name="categoryId"
-                                    className="rounded-lg border border-gray-300 p-3 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                    className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                                 >
                                     <option value="">
                                         {t(
@@ -450,7 +444,7 @@ export default function Expense() {
                                 <input
                                     name="receipt"
                                     type="file"
-                                    className="rounded-lg border border-gray-300 p-3 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                    className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                                 />
 
                                 {/* Type selection */}
@@ -489,13 +483,13 @@ export default function Expense() {
                                         <input
                                             name="startDate"
                                             type="date"
-                                            className="rounded-lg border border-gray-300 p-3 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                            className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                                             required
                                         />
                                         <input
                                             name="endDate"
                                             type="date"
-                                            className="rounded-lg border border-gray-300 p-3 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                                            className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5 transition outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                                             required
                                         />
                                     </div>
