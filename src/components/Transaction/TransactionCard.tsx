@@ -20,6 +20,7 @@ import { CurrencyContext } from "../../context/CurrencyContext"
 import { formatCurrency } from "../../utils/currency"
 import formatName from "../../utils/FormatTransactionName"
 import type { Transaction } from "./Types"
+import useWindowDimensions from "../../hooks/useWindowDimensions"
 
 type TransactionCardProps = {
   transaction: Transaction
@@ -53,6 +54,7 @@ const categoryColors: Record<string, string> = {
 export default function TransactionCard({ transaction, view, actions }: TransactionCardProps) {
   const { currency } = useContext(CurrencyContext)
   const { t } = useTranslation()
+  const { width } = useWindowDimensions()
 
   const formattedDate = new Date(transaction.date).toLocaleDateString(t("local_date_format", "en-US"), {
     day: "2-digit",
@@ -98,7 +100,7 @@ export default function TransactionCard({ transaction, view, actions }: Transact
       </div>
 
       {/* Main content */}
-      {view === "list" ? (
+      {(view === "list" && width > 500) ? (
         <div className="grid grid-cols-12 gap-2 items-center ml-12">
           {/* Colonne Nom - 3 colonnes */}
           <div className="col-span-3 flex items-center gap-1">
