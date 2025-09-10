@@ -40,7 +40,7 @@ export default function SearchPanel({ onSearch, onClear }: Props) {
                             if (searchInputRef.current) searchInputRef.current.value = "";
                             onClear();
                         }}
-                        className="text-gray-700 font-medium bg-white border border-gray-300 py-1.5 px-4 rounded-lg hover:bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-600"
+                        className="text-gray-700 font-medium bg-white border border-gray-300 py-1.5 px-4 max-sm:px-2.5 rounded-lg hover:bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-600"
                     >
                         {t('clear', 'Clear')}
                     </motion.button>
@@ -48,7 +48,7 @@ export default function SearchPanel({ onSearch, onClear }: Props) {
                         type="submit"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="text-white font-medium bg-blue-600 py-1.5 px-4 rounded-lg hover:bg-blue-700"
+                        className="text-white font-medium bg-blue-600 py-1.5 px-4 max-sm:px-2.5 rounded-lg hover:bg-blue-700"
                     >
                         {t('search', 'Search')}
                     </motion.button>
