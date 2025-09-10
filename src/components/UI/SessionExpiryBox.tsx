@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAccessToken } from "../../utils/getCookiesToken";
+import { getAccessToken, getRefreshToken } from "../../utils/getCookiesToken";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"
 import { useTranslation } from 'react-i18next'
@@ -47,7 +47,7 @@ export default function SessionExpiryBox() {
         }
     }
 
-    if (errorMessage) return <ErrorMessage message="Failed to refresh. Logging out" onClose={() => navigate("/")} />
+    if (errorMessage) return <ErrorMessage message={getRefreshToken() ? t("refresh_error_with_token", "Failed to refresh. Logging out") : t("refresh_error_no_token", "No refresh token. Logging out")} onClose={() => navigate("/")} />
 
     if (isExpired) return (
         <motion.div
