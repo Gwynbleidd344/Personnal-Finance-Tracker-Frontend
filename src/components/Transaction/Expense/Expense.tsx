@@ -1,12 +1,13 @@
-import  { useState, type JSX } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ExpenseFilter from '../../UI/ExpenseFilter';
+import type { Transaction } from '../Types';
+import ExpenseConfirmModal from './ExpenseConfirmModal';
 import ExpenseHeader from './ExpenseHeader';
 import ExpenseList from './ExpenseList';
 import ExpenseModal from './ExpenseModal';
-import ExpenseConfirmModal from './ExpenseConfirmModal';
-import ExpenseFilter from '../../UI/ExpenseFilter';
+import * as expenseActionsModule from './hooks/useExpenseActions';
 import useExpenseData from './hooks/useExpenseData';
-import useExpenseActions from './hooks/useExpenseActions';
 
 type ChartOptions = {
   start: Date;
@@ -15,10 +16,13 @@ type ChartOptions = {
   type?: string;
 };
 
-export default function Expense(): JSX.Element {
+const resolveUseExpenseActions = (mod: any) =>
+  mod?.default ?? mod?.useExpenseActions ?? (() => ({}));
+
+export default function Expense(): React.ReactElement {
   const { t } = useTranslation();
   const [view, setView] = useState<'grid' | 'list'>(
-    () => (localStorage.getItem('transactionView') as 'grid' | 'list') || 'grid'
+    () => (localStorage.getItem('transactionView') as 'grid' | 'list') || 'grid',
   );
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,8 +37,11 @@ export default function Expense(): JSX.Element {
     type: undefined,
   });
 
-  const { categoryList, transactions, setTransactions, categories, setCategories } = useExpenseData(t);
+  // pass t as any to avoid strict signature mismatch with react-i18next TFunction
+  const { categoryList, transactions, setTransactions, categories } = useExpenseData(t as any);
 
+  // support both named and default exports from hook file
+  const useExpenseActions = resolveUseExpenseActions(expenseActionsModule);
   const {
     handleAddTransaction,
     handleUpdateTransaction,
@@ -46,17 +53,23 @@ export default function Expense(): JSX.Element {
     setIsModalOpen,
     setEditingId,
     setIsConfirmModalOpen,
-  });
+    t,
+  } as any);
+
+  const editingTransaction = useMemo(
+    () => (editingId ? transactions.find((tx) => tx.id === editingId) ?? null : null),
+    [editingId, transactions],
+  );
 
   const filteredTransactions = transactions.filter((tx) => {
-    const matchesSearch =
-      tx.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      tx.category?.toLowerCase().includes(searchTerm.toLowerCase());
+    const name = (tx.name ?? '').toString().toLowerCase();
+    const cat = (tx.category ?? '').toString().toLowerCase();
+    const matchesSearch = name.includes(searchTerm.toLowerCase()) || cat.includes(searchTerm.toLowerCase());
     const matchesCategory = !chartOptions.category || tx.category === chartOptions.category;
-    const transactionDate = new Date(tx.date);
+    const transactionDate = tx.date ? new Date(tx.date) : null;
     const matchesDate =
-      (!chartOptions.start || transactionDate >= chartOptions.start) &&
-      (!chartOptions.end || transactionDate <= chartOptions.end);
+      (!chartOptions.start || !transactionDate || transactionDate >= chartOptions.start) &&
+      (!chartOptions.end || !transactionDate || transactionDate <= chartOptions.end);
     const matchesRecurring =
       !chartOptions.type ||
       (chartOptions.type === 'recurring' && tx.is_recurrent) ||
@@ -71,7 +84,7 @@ export default function Expense(): JSX.Element {
   };
 
   return (
-    <div className="z-50 flex lg:h-[96vh] h-[calc(96vh-120px)] w-full flex-col items-center rounded-lg bg-gray-100 dark:border-2 dark:border-gray-800 dark:bg-gray-900">
+    <div className="z-50 flex h-[calc(96vh-120px)] w-full flex-col items-center rounded-lg bg-gray-100 lg:h-[96vh] dark:border-2 dark:border-gray-800 dark:bg-gray-900">
       <div className="flex min-h-full w-full flex-col rounded-2xl">
         <ExpenseHeader
           t={t}
@@ -83,32 +96,46 @@ export default function Expense(): JSX.Element {
           isFilterVisible={isFilterVisible}
           setIsFilterVisible={setIsFilterVisible}
         />
+
         <div className={`${isFilterVisible ? '' : 'max-md:hidden'} px-4 pb-2.5`}>
           <ExpenseFilter chartOptions={chartOptions} setChartOptions={setChartOptions} categoryList={categoryList} />
         </div>
+
         <ExpenseList
           transactions={filteredTransactions}
           view={view}
-          actions={(t) => ({
-            onDownload: () => handleDownloadReceipt(t.id),
-            onChange: () => handleChangeTransaction(t.id),
-            onDelete: () => {
-              setIsConfirmModalOpen(true);
-              setEditingId(t.id);
+          actions={{
+            onDownload: (tx: Transaction) => handleDownloadReceipt?.(tx.id),
+            onChange: (tx: Transaction) => {
+              setEditingId(tx.id);
+              setIsModalOpen(true);
+              handleChangeTransaction?.(tx.id);
             },
-          })}
+            onDelete: (tx: Transaction) => {
+              setEditingId(tx.id);
+              setIsConfirmModalOpen(true);
+            },
+          }}
         />
       </div>
 
       <ExpenseModal
         t={t}
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={editingId ? handleUpdateTransaction : handleAddTransaction}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingId(null);
+        }}
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+          if (editingId) return handleUpdateTransaction?.(e, editingId);
+          return handleAddTransaction?.(e);
+        }}
         editingId={editingId}
         typeValue={typeValue}
         setTypeValue={setTypeValue}
         categories={categories}
+      
+        editingTransaction={editingTransaction}
       />
 
       <ExpenseConfirmModal
@@ -117,8 +144,8 @@ export default function Expense(): JSX.Element {
         onCancel={() => setIsConfirmModalOpen(false)}
         onConfirm={() => {
           if (editingId) {
+            handleDeleteTransaction?.(editingId);
             setIsConfirmModalOpen(false);
-            handleDeleteTransaction(editingId);
             setEditingId(null);
           }
         }}
