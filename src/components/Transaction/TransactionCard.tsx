@@ -196,7 +196,7 @@ export default function TransactionCard({ transaction, view, actions }: Transact
               </p>
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-              <span className="inline-block rounded-lg bg-gray-300 px-3 py-1.5 font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+              <span className="inline-block rounded-lg bg-gray-300 px-3 py-1.5 font-medium text-gray-700 dark:bg-gray-900 dark:text-gray-300">
                 {limitCategoryName(
                   formatName(
                     transaction.type === "expense"
