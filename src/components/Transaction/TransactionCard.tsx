@@ -15,6 +15,11 @@ import {
     FaTaxi,
     FaTrash,
     FaUtensils,
+    FaFile,
+    FaUbuntu,
+    FaGrinTongueWink,
+    FaMoneyBill,
+    FaPuzzlePiece
 } from 'react-icons/fa';
 import { CurrencyContext } from '../../context/CurrencyContext';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
@@ -91,7 +96,7 @@ export default function TransactionCard({
             <FaMoneyBillWave className="text-white" />
         ) : (
             categoryIcons[transaction.category || ''] || (
-                <FaUtensils className="text-white" />
+                <FaMoneyBill className="text-white" />
             )
         );
 
