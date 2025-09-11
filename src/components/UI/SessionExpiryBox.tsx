@@ -12,20 +12,26 @@ export default function SessionExpiryBox() {
     const { t } = useTranslation()
 
     useEffect(() => {
-        try {
+        const checkCookieValidity = () => {
             fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
                 mode: 'cors', credentials: 'include',
                 headers: { Authorization: `${getAccessToken()}` },
             })
                 .then(res => {
-                    if (res.ok) return;
+                    if (res.ok) return setIsExpired(false);
                     else {
                         return setIsExpired(true)
                     }
                 })
-        } catch (error) {
-
+                .catch((rej) => {
+                    console.log(rej.message || "Failed to check cookie validity")
+                    return setIsExpired(true)
+                })
         }
+        checkCookieValidity()
+        setInterval(() => {
+            checkCookieValidity()
+        }, 1000 * 60 * (parseFloat(import.meta.env.VITE_COOKIE_CHECK_INTERVAL || 5)))
     }, [])
 
     const refreshToken = () => {
@@ -47,7 +53,13 @@ export default function SessionExpiryBox() {
         }
     }
 
-    if (errorMessage) return <ErrorMessage message={getRefreshToken() ? t("refresh_error_with_token", "Failed to refresh. Logging out") : t("refresh_error_no_token", "No refresh token. Logging out")} onClose={() => navigate("/")} />
+    if (errorMessage) {
+        return <ErrorMessage
+            message={getRefreshToken() ?
+                t("refresh_error_with_token", "Failed to refresh. Logging out") :
+                t("refresh_error_no_token", "No refresh token. Logging out")}
+            onClose={() => navigate("/")} />
+    }
 
     if (isExpired) return (
         <motion.div
