@@ -13,7 +13,6 @@ export default function IncomeModal({ t, isOpen, onClose, onSubmit, isDeleting=f
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-
       <motion.div initial={{scale:0,opacity:0}} exit={{scale:0,opacity:0}} animate={{scale:1,opacity:1}} transition={{duration:0.15}} className="w-full max-w-md rounded-xl bg-white dark:bg-gray-800 dark:text-gray-200 max-sm:m-1.5 p-6 shadow-lg">
         <h2 className="mb-3 text-2xl font-bold">{isDeleting ? t('delete','Delete') : t('add_new','Add New')} {t('income','Income')}</h2>
         <form className="flex flex-col space-y-4" onSubmit={onSubmit}>

@@ -10,9 +10,7 @@ type ExpenseModalProps = {
   typeValue: 'one-time' | 'recurring';
   setTypeValue: (v: 'one-time' | 'recurring') => void;
   categories: Category[];
-
-  editingTransaction?: Transaction | null; 
-
+  editingTransaction?: Transaction | null;
 };
 
 export default function ExpenseModal({
@@ -21,7 +19,6 @@ export default function ExpenseModal({
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-
       <motion.div initial={{ scale: 0, opacity: 0 }} exit={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.15 }} className="w-full max-w-md rounded-xl bg-white dark:bg-gray-800 dark:text-gray-200 max-sm:m-1.5 p-6 shadow-lg">
         <h2 className="mb-3 text-2xl font-bold">
           {editingId ? `${t('update', 'Update')} ${t('expense', 'Expense')}` : `${t('add_new', 'Add New')} ${t('expense', 'Expense')}`}
@@ -51,7 +48,6 @@ export default function ExpenseModal({
           <div className="mt-2 flex justify-end space-x-3">
             <button type="button" onClick={onClose} className="rounded-lg bg-gray-200 dark:text-black px-5 py-2"> {t('cancel', 'Cancel')} </button>
             <button type="submit" className="rounded-lg bg-emerald-600 px-5 py-2 text-white"> {editingId ? t('update', 'Update') : t('add', 'Add')} </button>
-
           </div>
         </form>
       </motion.div>
