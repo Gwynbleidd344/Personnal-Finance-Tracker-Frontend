@@ -53,23 +53,23 @@ export default function ExpenseList() {
         <div className="w-full mx-auto p-6">
             <div className="bg-white dark:bg-gray-800 text-black hadow-md rounded-lg overflow-hidden">
                 <table className="min-w-full">
-                    <thead className="bg-gray-50 dark:bg-gray-200">
+                    <thead className="bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th
                                 scope="col"
-                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-black uppercase tracking-wider"
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
                             >
                                 {t("name", "Name")}
                             </th>
                             <th
                                 scope="col"
-                                className="max-[450px]:hidden px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-black uppercase tracking-wider"
+                                className="max-[450px]:hidden px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
                             >
                                 {t("category", "Category")}
                             </th>
                             <th
                                 scope="col"
-                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-black uppercase tracking-wider"
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
                             >
                                 {t("amount", "Amount")}
                             </th>

@@ -100,7 +100,7 @@ export default function Dashboard() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         className='flex p-3 px-6 -mt-3 mb-2 items-center border border-amber-300 bg-yellow-100/70 rounded-[10px]'>
-                        <h3 className='font-medium text-lg text-gray-800 flex items-center gap-2'><i className="bxr bx-alert-triangle text-yellow-500 text-2xl" />{balanceAlert.message}</h3>
+                        <h3 className='font-medium text-lg text-gray-800 dark:text-gray-900 flex items-center gap-2'><i className="bxr bx-alert-triangle text-yellow-500 dark:text-yellow-300 text-2xl" />{balanceAlert.message}</h3>
                     </motion.div>)}
                 </AnimatePresence>
                 <div className={'xl:grid grid-cols-3 flex flex-row w-full justify-evenly gap-6 flex-wrap '}>

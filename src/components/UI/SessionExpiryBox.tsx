@@ -12,20 +12,26 @@ export default function SessionExpiryBox() {
     const { t } = useTranslation()
 
     useEffect(() => {
-        try {
+        const checkCookieValidity = () => {
             fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
                 mode: 'cors', credentials: 'include',
                 headers: { Authorization: `${getAccessToken()}` },
             })
                 .then(res => {
-                    if (res.ok) return;
+                    if (res.ok) return setIsExpired(false);
                     else {
                         return setIsExpired(true)
                     }
                 })
-        } catch (error) {
-
+                .catch((rej) => {
+                    console.log(rej.message || "Failed to check cookie validity")
+                    return setIsExpired(true)
+                })
         }
+        checkCookieValidity()
+        setInterval(() => {
+            checkCookieValidity()
+        }, 1000 * 60 * (parseFloat(import.meta.env.VITE_COOKIE_CHECK_INTERVAL || 5)))
     }, [])
 
     const refreshToken = () => {
@@ -47,7 +53,13 @@ export default function SessionExpiryBox() {
         }
     }
 
-    if (errorMessage) return <ErrorMessage message={getRefreshToken() ? t("refresh_error_with_token", "Failed to refresh. Logging out") : t("refresh_error_no_token", "No refresh token. Logging out")} onClose={() => navigate("/")} />
+    if (errorMessage) {
+        return <ErrorMessage
+            message={getRefreshToken() ?
+                t("refresh_error_with_token", "Failed to refresh. Logging out") :
+                t("refresh_error_no_token", "No refresh token. Logging out")}
+            onClose={() => navigate("/")} />
+    }
 
     if (isExpired) return (
         <motion.div
@@ -58,7 +70,7 @@ export default function SessionExpiryBox() {
             <h4 className="font-medium text-white">{t("session_expired", "Session expired")}</h4>
             <motion.button
                 type="button"
-                className="w-fit h-fit rounded-lg py-1 px-2 shadow-md bg-white text-gray-800 font-[600]"
+                className="w-fit h-fit rounded-lg py-1 px-2 shadow-md transition bg-white dark:bg-gray-800 dark:text-gray-100  text-gray-800 font-[600]"
                 whileHover={{ scale: 1.05 }}
                 onClick={refreshToken}>{t("refresh", "Refresh")}</motion.button>
         </motion.div>
