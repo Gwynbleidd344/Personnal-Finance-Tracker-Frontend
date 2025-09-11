@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import deleteCookies from '../../utils/deleteCookies';
 
 export default function NavBar() {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -123,7 +124,7 @@ export default function NavBar() {
                 to="/login">
                 <div
                     className={`flex lg:mt-4 cursor-pointer text-nowrap items-center space-x-2 text-gray-700 hover:text-red-600 dark:text-gray-200`}
-                    onClick={() => document.cookie.split("; ").forEach(cookie => document.cookie = cookie.split("=")[0] + "=;expires=" + new Date().toUTCString())}
+                    onClick={deleteCookies}
                 >
                     <i className="bxr bx-arrow-out-left-square-half text-2xl"></i>
                     <span className={textAnimation('text-xl font-medium max-lg:hidden')}>

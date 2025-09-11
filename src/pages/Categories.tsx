@@ -6,7 +6,6 @@ import CategoryList from "../components/Categories/CategoryList";
 import CategoryModal from "../components/Categories/CategoryModal";
 import SearchPanel from "../components/Categories/SearchPanel";
 import { getAccessToken } from "../utils/getCookiesToken";
-import SessionExpiryBox from "../components/UI/SessionExpiryBox";
 
 type Category = {
     id: string;

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAccessToken } from "../../utils/getCookiesToken";
+import deleteCookies from "../../utils/deleteCookies";
 
 export default function DeleteAccount() {
   const { t } = useTranslation();
@@ -36,6 +37,7 @@ export default function DeleteAccount() {
       }
 
       setMessage(t("account_delete_success", "Account deleted. You will be logged out."));
+      deleteCookies()
       setTimeout(() => navigate("/login"), 3000)
     } catch {
       setMessage(t("delete_error", "Something went wrong. Please try again."));

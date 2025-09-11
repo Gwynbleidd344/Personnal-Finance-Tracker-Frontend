@@ -8,7 +8,6 @@ import CurrencySettings from '../components/Settings/CurrencySettings';
 import DeleteData from "../components/Settings/DeleteData.tsx";
 import DeleteAccount from '../components/Settings/DeleteAccount.tsx';
 import { getAccessToken } from '../utils/getCookiesToken.ts';
-import SessionExpiryBox from '../components/UI/SessionExpiryBox.tsx';
 
 export default function Settings() {
     const [isChangePasswordOpen, setIsChangePasswordOpen] =

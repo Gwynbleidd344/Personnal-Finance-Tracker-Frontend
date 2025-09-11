@@ -8,7 +8,6 @@ import BarChart from '../components/Dashboard/BarChart.tsx';
 import ExpenseFilter from '../components/UI/ExpenseFilter.tsx';
 import AiAdvice from '../components/Dashboard/AiAdvice.tsx';
 import { getAccessToken } from '../utils/getCookiesToken.ts';
-import SessionExpiryBox from '../components/UI/SessionExpiryBox.tsx';
 
 type MonthlySummaryType = {
     year: number
