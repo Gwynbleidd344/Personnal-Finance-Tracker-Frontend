@@ -390,7 +390,7 @@ export default function Expense() {
                             exit={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ duration: 0.15 }}
-                            className="w-full max-sm:mx-2 max-w-md rounded-xl bg-white p-6 shadow-lg"
+                            className="w-full max-sm:mx-2 max-w-md rounded-xl bg-white dark:bg-gray-800 dark:text-white p-6 shadow-lg"
                         >
                             <h2 className="mb-3 text-2xl font-bold">
                                 {editingId
