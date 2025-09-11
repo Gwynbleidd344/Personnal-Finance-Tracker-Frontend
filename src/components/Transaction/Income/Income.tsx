@@ -129,19 +129,19 @@ export default function Income() {
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <motion.div initial={{scale:0,opacity:0}} exit={{scale:0,opacity:0}} animate={{scale:1,opacity:1}} transition={{duration:0.15}} className="w-full max-sm:mx-2 max-w-md rounded-xl bg-white p-6 shadow-lg">
+            <motion.div initial={{scale:0,opacity:0}} exit={{scale:0,opacity:0}} animate={{scale:1,opacity:1}} transition={{duration:0.15}} className="w-full max-sm:mx-2 max-w-md rounded-xl bg-white dark:bg-gray-800 dark:text-gray-200 max-sm:m-1.5 p-6 shadow-lg">
               <h2 className="mb-3 text-2xl font-bold">{isModifying.current.status ? isModifying.current.isDeleting ? t('delete','Delete') : t('update','Update') : t('add_new','Add New')} {t('income','Income')}</h2>
               <form className="flex flex-col space-y-4" onSubmit={(e) => isModifying.current.status ? isModifying.current.isDeleting ? handleDeleteTransaction(e) : handleUpdateTransaction(e) : handleAddTransaction(e)}>
                 {!isModifying.current.isDeleting && (
                   <>
-                    <input name="name" type="text" placeholder={t('name','Name')} className="rounded-lg border border-gray-300 p-3" required />
-                    <input name="amount" type="number" placeholder={t('amount','Amount')} className="rounded-lg border border-gray-300 p-3" required />
-                    <input name="date" type="date" className="rounded-lg border border-gray-300 p-3" required />
-                    <input name="source" type="text" placeholder={t('source','Source')} className="rounded-lg border border-gray-300 p-3" required />
+                    <input name="name" type="text" placeholder={t('name','Name')} className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5" required />
+                    <input name="amount" type="number" placeholder={t('amount','Amount')} className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5" required />
+                    <input name="date" type="date" className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5" required />
+                    <input name="source" type="text" placeholder={t('source','Source')} className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5" required />
                   </>
                 )}
                 <div className="mt-2 flex justify-end space-x-3">
-                  <button type="button" onClick={closeModal} className="rounded-lg bg-gray-200 px-5 py-2">{t('cancel','Cancel')}</button>
+                  <button type="button" onClick={closeModal} className="rounded-lg bg-gray-200 dark:text-black px-5 py-2">{t('cancel','Cancel')}</button>
                   <button type="submit" className={`rounded-lg px-5 py-2 text-white ${isModifying.current.isDeleting ? 'bg-red-700 hover:bg-red-800' : 'bg-emerald-600 hover:bg-emerald-700'}`}>{isModifying.current.status ? isModifying.current.isDeleting ? t('delete','Delete') : t('update','Update') : t('add','Add')}</button>
                 </div>
               </form>
