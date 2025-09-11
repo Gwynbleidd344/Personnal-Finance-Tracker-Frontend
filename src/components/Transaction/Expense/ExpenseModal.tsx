@@ -1,6 +1,5 @@
-
 import { motion } from 'framer-motion';
-import type { Category } from '../Types';
+import type { Category, Transaction } from '../Types';
 
 type ExpenseModalProps = {
   t: any;
@@ -11,6 +10,7 @@ type ExpenseModalProps = {
   typeValue: 'one-time' | 'recurring';
   setTypeValue: (v: 'one-time' | 'recurring') => void;
   categories: Category[];
+  editingTransaction?: Transaction | null; 
 };
 
 export default function ExpenseModal({
