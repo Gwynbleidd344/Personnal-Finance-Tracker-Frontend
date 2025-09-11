@@ -17,7 +17,7 @@ const ExpenseList: FC<Props> = ({ transactions, view, actions }) => {
   return (
     <div
       className={`mt-2 w-full overflow-y-auto px-4 pt-3 ${
-        view === 'grid' ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3' : 'flex flex-col space-y-4'
+        view === 'grid' ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3' : 'flex flex-col space-y-0'
       }`}
       style={{ maxHeight: 'calc(100vh - 220px)' }}
     >
