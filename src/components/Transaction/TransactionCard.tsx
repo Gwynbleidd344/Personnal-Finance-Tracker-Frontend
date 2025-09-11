@@ -4,17 +4,17 @@ import type React from "react"
 import { useContext } from "react"
 import { useTranslation } from "react-i18next"
 import {
-    FaBolt,
-    FaCoffee,
-    FaExchangeAlt,
-    FaFileDownload,
-    FaFilm,
-    FaMoneyBillWave,
-    FaPlus,
-    FaTaxi,
-    FaTrash,
-    FaUtensils,
-    FaSyncAlt, 
+  FaBolt,
+  FaCoffee,
+  FaExchangeAlt,
+  FaFileDownload,
+  FaFilm,
+  FaMoneyBillWave,
+  FaPlus,
+  FaTaxi,
+  FaTrash,
+  FaUtensils,
+  FaSyncAlt,
 } from "react-icons/fa"
 import { CurrencyContext } from "../../context/CurrencyContext"
 import { formatCurrency } from "../../utils/currency"
@@ -64,10 +64,10 @@ export default function TransactionCard({ transaction, view, actions }: Transact
 
   const formattedEndDate = transaction.end_date
     ? new Date(transaction.end_date).toLocaleDateString(t("local_date_format", "en-US"), {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      })
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    })
     : t("unset", "Unset")
 
   const limitCategoryName = (name: string, maxWords = 15): string => {
@@ -88,13 +88,12 @@ export default function TransactionCard({ transaction, view, actions }: Transact
 
   return (
     <div
-      className={`group relative mb-2 max-md:h-fit scale-99 cursor-pointer rounded-xl border border-gray-300 bg-gray-100 px-4 py-3 shadow-sm backdrop-blur-sm transition-transform duration-200 hover:scale-100 hover:shadow-md hover:before:opacity-100 dark:border-gray-600/55 dark:bg-gray-800 ${
-        view === "list" ? "h-20" : "h-auto"
-      }`}
+      className={`group relative mb-2 scale-99 cursor-pointer rounded-xl border border-gray-300 bg-gray-100 px-4 py-3 shadow-sm backdrop-blur-sm transition-transform duration-200 hover:scale-100 hover:shadow-md hover:before:opacity-100 max-md:h-fit dark:border-gray-600/55 dark:bg-gray-800 ${view === 'list' ? 'h-15 bg-gray-100' : 'h-auto'
+        }`}
     >
       {/* Badge icon */}
       <div
-        className={`absolute -top-3 left-3 flex h-10 w-10 items-center justify-center rounded-full ${bgColor} shadow`}
+        className={`absolute -top-3 left-3 flex  items-center justify-center rounded-full ${bgColor} ${view === 'list' ? 'h-8 w-8' : 'h-10 w-10'} shadow`}
       >
         {icon}
       </div>
@@ -139,11 +138,10 @@ export default function TransactionCard({ transaction, view, actions }: Transact
           <div className="col-span-2 text-right">
             <div className="flex items-center justify-end gap-x-1">
               <p
-                className={`text-base sm:text-lg font-bold tracking-tight whitespace-nowrap ${
-                  transaction.type === "expense"
+                className={`text-base sm:text-lg font-bold tracking-tight whitespace-nowrap ${transaction.type === "expense"
                     ? "text-red-600 dark:text-red-500/75"
                     : "text-emerald-600 dark:text-emerald-400"
-                }`}
+                  }`}
               >
                 {transaction.type === "expense" ? "-" : "+"}
                 {formatCurrency(transaction.amount, currency, true)}
@@ -183,15 +181,14 @@ export default function TransactionCard({ transaction, view, actions }: Transact
               <h2 className="pl-1.5 text-lg leading-tight font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-1">
                 {formatName(transaction.name)}
                 {transaction.is_recurrent && (
-                  <FaSyncAlt className="text-gray-400 text-sm" /> 
+                  <FaSyncAlt className="text-gray-400 text-sm" />
                 )}
               </h2>
               <p
-                className={`text-xl font-bold tracking-tight ${
-                  transaction.type === "expense"
+                className={`text-xl font-bold tracking-tight ${transaction.type === "expense"
                     ? "text-red-600 dark:text-red-500/75"
                     : "text-emerald-600 dark:text-emerald-400"
-                }`}
+                  }`}
               >
                 {transaction.type === "expense" ? "-" : "+"}
                 {formatCurrency(transaction.amount, currency, true)}
