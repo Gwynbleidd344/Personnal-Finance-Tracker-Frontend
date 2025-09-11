@@ -40,7 +40,7 @@ export default function CurrencySettings() {
                             className={`px-4 py-2 rounded-full border text-sm transition
                 ${currency === c.code
                                     ? 'bg-blue-500 text-white border-blue-500'
-                                    : 'border-gray-300 text-gray-700 dark:text-gray-500 hover:border-blue-400 hover:text-blue-600'
+                                    : 'border-gray-300 text-gray-700 dark:text-gray-300 hover:border-blue-400 hover:text-blue-600'
                                 }`}
                         >
                             {c.label}

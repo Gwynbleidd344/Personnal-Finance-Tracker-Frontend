@@ -62,7 +62,7 @@ export default function DeleteData() {
       {/* Confirm Modal */}
       {isConfirmOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+          <div className="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-lg p-6 max-sm:mx-1.5 max-w-sm w-full">
             <h2 className="text-lg font-semibold mb-4">
               {t(
                 "delete_confirm_message",
@@ -72,7 +72,7 @@ export default function DeleteData() {
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setIsConfirmOpen(false)}
-                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition"
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 dark:text-black transition"
               >
                 {t("cancel", "Cancel")}
               </button>
@@ -90,7 +90,7 @@ export default function DeleteData() {
       {/* Info Modal */}
       {message && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+          <div className="bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-lg p-6 max-sm:mx-1.5 max-w-sm w-full">
             <p className="text-base">{message}</p>
             <div className="flex justify-end mt-4">
               <button

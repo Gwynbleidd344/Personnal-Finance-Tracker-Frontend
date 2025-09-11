@@ -21,22 +21,19 @@ export default function LanguageToggle() {
                 {t("language_preference", "Choose in which language you are more comfortable.")}
             </p>
             <div className="flex items-center gap-3">
-                <span className={`font-medium ${language === "fr" ? "text-gray-900 dark:text-gray-300" : "text-gray-500 dark:text-gray-800"}`}>FR</span>
+                <span className={`font-medium transition ${language === "fr" ? "text-gray-900 dark:text-gray-300" : "text-gray-500"}`}>FR</span>
 
                 <button
                     onClick={toggleLanguage}
-                    className={`w-14 h-8 flex items-center cursor-pointer rounded-full p-1 relative transition-colors duration-300 focus:outline-none ${
-                        language === "en" ? "bg-blue-500" : "bg-gray-300"
-                    }`}
+                    className={`w-14 h-8 flex items-center cursor-pointer rounded-full p-1 relative transition-colors duration-300 focus:outline-none bg-blue-500`}
                 >
                     <div
-                        className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${
-                            language === "en" ? "translate-x-6" : "translate-x-0"
-                        }`}
+                        className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${language === "en" ? "translate-x-6" : "translate-x-0"
+                            }`}
                     ></div>
                 </button>
 
-                <span className={`font-medium ${language === "en" ? "text-gray-900 dark:text-gray-300" : "text-gray-500 dark:text-gray-800"}`}>EN</span>
+                <span className={`font-medium transition ${language === "en" ? "text-gray-900 dark:text-gray-300" : "text-gray-500"}`}>EN</span>
             </div>
         </div>
     );
