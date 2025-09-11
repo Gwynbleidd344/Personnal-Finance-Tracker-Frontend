@@ -1,6 +1,7 @@
 import type { FC } from 'react'; // type-only import
 import TransactionCard from '../TransactionCard';
 import type { Transaction } from '../Types';
+import { AnimatePresence, motion } from 'framer-motion';
 
 type Props = {
   transactions: Transaction[];
@@ -20,18 +21,29 @@ const ExpenseList: FC<Props> = ({ transactions, view, actions }) => {
       }`}
       style={{ maxHeight: 'calc(100vh - 220px)' }}
     >
-      {transactions.map((tx) => (
-        <TransactionCard
-          key={tx.id}
-          transaction={tx}
-          view={view}
-          actions={{
-            onDownload: () => actions.onDownload(tx),
-            onChange: () => actions.onChange(tx),
-            onDelete: () => actions.onDelete(tx),
-          }}
-        />
-      ))}
+      <AnimatePresence>
+        {transactions.map((tx) => (
+          <motion.div
+            key={tx.id}
+            layout
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.1, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <TransactionCard
+              key={tx.id}
+              transaction={tx}
+              view={view}
+              actions={{
+                onDownload: () => actions.onDownload(tx),
+                onChange: () => actions.onChange(tx),
+                onDelete: () => actions.onDelete(tx),
+              }}
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 };
