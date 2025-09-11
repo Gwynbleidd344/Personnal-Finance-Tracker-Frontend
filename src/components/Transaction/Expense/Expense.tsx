@@ -37,10 +37,8 @@ export default function Expense(): React.ReactElement {
     type: undefined,
   });
 
-  // pass t as any to avoid strict signature mismatch with react-i18next TFunction
   const { categoryList, transactions, setTransactions, categories } = useExpenseData(t as any);
 
-  // support both named and default exports from hook file
   const useExpenseActions = resolveUseExpenseActions(expenseActionsModule);
   const {
     handleAddTransaction,
