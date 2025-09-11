@@ -128,14 +128,17 @@ export default function Expense(): React.ReactElement {
                         categoryList={categoryList}
                     />
                 </div>
-
-                <div className="hidden grid-cols-12 items-center gap-2 border rounded-sm mx-5 border-gray-300 px-4 py-2.5 font-semibold text-gray-600 md:grid md:pl-12 dark:border-gray-700 dark:text-gray-300">
-                    <div className="col-span-3 pl-5">Name</div>
-                    <div className="col-span-3 pl-5">Category</div>
-                    <div className="col-span-2 pl-3">Date</div>
-                    <div className="col-span-2 text-right pr-4">Amount</div>
-                    <div className="col-span-2 text-right pr-10">Action</div>
-                </div>
+                {view === 'list' && (
+                    <div className="mx-5 hidden grid-cols-12 items-center gap-2 rounded-sm border border-gray-300 px-4 py-2.5 font-semibold text-gray-600 md:grid md:pl-12 dark:border-gray-700 dark:text-gray-300">
+                        <div className="col-span-3 pl-5">Name</div>
+                        <div className="col-span-3 pl-5">Category</div>
+                        <div className="col-span-2 pl-3">Date</div>
+                        <div className="col-span-2 pr-4 text-right">Amount</div>
+                        <div className="col-span-2 pr-10 text-right">
+                            Action
+                        </div>
+                    </div>
+                )}
 
                 <ExpenseList
                     transactions={filteredTransactions}
