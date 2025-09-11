@@ -31,7 +31,6 @@ export default function Settings() {
 
     return (
         <div className="mx-auto lg:h-[96vh] h-[calc(96vh-120px)] overflow-y-scroll dark:border-2 dark:border-gray-800 rounded-lg bg-gray-100 dark:bg-gray-900 p-8 shadow-md">
-            <SessionExpiryBox />
             <h1 className="mb-6 border-b border-gray-300 dark:border-gray-700 pb-4 text-3xl font-bold text-gray-800 dark:text-gray-100">
                 {t('settings_title', 'Settings')}
             </h1>

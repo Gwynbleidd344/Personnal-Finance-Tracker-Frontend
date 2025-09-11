@@ -140,7 +140,6 @@ export default function Categories() {
 
     return (
         <>
-            <SessionExpiryBox />
             <AnimatePresence>
                 {notificationMessage ? (
                     <ErrorMessage

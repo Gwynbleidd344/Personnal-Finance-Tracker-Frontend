@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAccessToken, getRefreshToken } from "../../utils/getCookiesToken";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"
 import { useTranslation } from 'react-i18next'
 import ErrorMessage from "./ErrorMessage";
@@ -9,30 +9,25 @@ export default function SessionExpiryBox() {
     const [isExpired, setIsExpired] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<boolean>(false)
     const navigate = useNavigate()
+    const location = useLocation()
     const { t } = useTranslation()
 
-    useEffect(() => {
-        const checkCookieValidity = () => {
-            fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
-                mode: 'cors', credentials: 'include',
-                headers: { Authorization: `${getAccessToken()}` },
-            })
-                .then(res => {
-                    if (res.ok) return setIsExpired(false);
-                    else {
-                        return setIsExpired(true)
-                    }
-                })
-                .catch((rej) => {
-                    console.log(rej.message || "Failed to check cookie validity")
+    const checkCookieValidity = () => {
+        fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
+            mode: 'cors', credentials: 'include',
+            headers: { Authorization: `${getAccessToken()}` },
+        })
+            .then(res => {
+                if (res.ok) return setIsExpired(false);
+                else {
                     return setIsExpired(true)
-                })
-        }
-        checkCookieValidity()
-        setInterval(() => {
-            checkCookieValidity()
-        }, 1000 * 60 * (parseFloat(import.meta.env.VITE_COOKIE_CHECK_INTERVAL || 5)))
-    }, [])
+                }
+            })
+            .catch((rej) => {
+                console.log(rej.message || "Failed to check cookie validity")
+                return setIsExpired(true)
+            })
+    }
 
     const refreshToken = () => {
         try {
@@ -52,6 +47,15 @@ export default function SessionExpiryBox() {
             console.log(error.message)
         }
     }
+
+    useEffect(() => {
+        checkCookieValidity()
+        setInterval(() => {
+            checkCookieValidity()
+        }, 1000 * 60 * (parseFloat(import.meta.env.VITE_COOKIE_CHECK_INTERVAL || 5)))
+    }, [])
+
+    useEffect(checkCookieValidity, [location])
 
     if (errorMessage) {
         return <ErrorMessage
