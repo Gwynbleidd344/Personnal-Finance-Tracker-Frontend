@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import ErrorMessage from "../components/UI/ErrorMessage";
-import { AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import CategoryList from "../components/Categories/CategoryList";
 import CategoryModal from "../components/Categories/CategoryModal";
 import SearchPanel from "../components/Categories/SearchPanel";
 import { getAccessToken } from "../utils/getCookiesToken";
+import handleRequestError from "../utils/handleRequestError";
 
 type Category = {
     id: string;
@@ -13,23 +13,14 @@ type Category = {
     created_at: string;
 };
 
-type Message = {
-    message: string;
-    error?: string;
-};
-
 export default function Categories() {
     const { t } = useTranslation();
     const token = getAccessToken()
 
-    const [categoryReload, setCategoryReload] = useState<boolean>(false);
-    const [categoryList, setCategoryList] = useState<Array<Category> | null>(
-        null
-    );
+    const [categoryList, setCategoryList] = useState<Category[]>([]);
     const [isUpdating, setIsUpdating] = useState(false);
     const [isCreating, setIsCreating] = useState(false);
-    const [notificationMessage, setNotificationMessage] =
-        useState<Message | null>(null);
+    const [notificationMessage, setNotificationMessage] = useState<string>('');
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     // controlled modal fields
@@ -41,42 +32,27 @@ export default function Categories() {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
-    useEffect(() => {
+    function fetchCategories() {
         fetch(`${import.meta.env.VITE_API_URL}/api/categories/`, {
             mode: 'cors', credentials: 'include',
             headers: { Authorization: `${token}` },
         })
-            .then(async (res) => {
-                return await res.json().then((res) => {
-                    if ("message" in res) {
-                        setNotificationMessage(res);
-                        return [];
-                    }
-                    return res;
-                });
-            })
+            .then(async (res) => { return handleRequestError(res, 'Failed to fetch categories') })
+            .then(async res => await res?.json())
             .then((res) => setCategoryList(res))
-            .catch(async (rej) => await handleNotification(rej));
-        setCategoryReload(false);
-    }, [categoryReload]);
-
-    async function handleNotification(res: any) {
-        return await res.json().then((res: any) => {
-            if ("message" in res) {
-                setNotificationMessage(res);
-            }
-        });
+            .catch(rej => setNotificationMessage(rej.message))
     }
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
 
     function handleCreate(categoryName: string) {
         if (categoryName.length > 15) {
-            setNotificationMessage({
-                message: "Category name cannot be longer than 15 characters.",
-                error: "Category name cannot be longer than 15 characters.",
-            });
-
+            setNotificationMessage("Category name cannot be longer than 15 characters.");
             return;
         }
+
         fetch(`${import.meta.env.VITE_API_URL}/api/categories/`, {
             mode: 'cors', credentials: 'include',
             method: "POST",
@@ -86,18 +62,15 @@ export default function Categories() {
             },
             body: JSON.stringify({ name: categoryName }),
         })
-            .then(async (res) => await handleNotification(res))
-            .then(() => setCategoryReload(true))
-            .catch(async (rej) => await handleNotification(rej))
+            .then(async (res) => { return handleRequestError(res, 'Failed to create categories') })
+            .then(() => fetchCategories())
+            .catch(rej => setNotificationMessage(rej.message))
             .finally(() => clearModal());
     }
 
     function handleUpdate(categoryId: string, categoryName: string) {
         if (categoryName.length > 15) {
-            setNotificationMessage({
-                message: "Category name cannot be longer than 15 characters.",
-                error: "Category name cannot be longer than 15 characters.",
-            });
+            setNotificationMessage("Category name cannot be longer than 15 characters.");
 
             return;
         }
@@ -110,8 +83,9 @@ export default function Categories() {
             },
             body: JSON.stringify({ name: categoryName }),
         })
-            .then(async (res) => await handleNotification(res))
-            .then(() => setCategoryReload(true))
+            .then(async (res) => { return handleRequestError(res, 'Failed to update categories') })
+            .then(() => fetchCategories())
+            .catch(rej => setNotificationMessage(rej.message))
             .finally(() => clearModal());
     }
 
@@ -124,8 +98,9 @@ export default function Categories() {
                 method: "DELETE",
             }
         )
-            .then(async (res) => await handleNotification(res))
-            .then(() => setCategoryReload(true))
+            .then(async (res) => { return handleRequestError(res, 'Failed to delete categories') })
+            .then(() => fetchCategories())
+            .catch(rej => setNotificationMessage(rej.message))
             .finally(() => clearModal());
     }
 
@@ -139,16 +114,7 @@ export default function Categories() {
 
     return (
         <>
-            <AnimatePresence>
-                {notificationMessage ? (
-                    <ErrorMessage
-                        message={
-                            notificationMessage?.error || notificationMessage?.message
-                        }
-                        onClose={() => setNotificationMessage(null)}
-                    />
-                ) : null}
-            </AnimatePresence>
+            <ErrorMessage message={notificationMessage} onClose={() => setNotificationMessage('')} />
 
             <div className={`lg:h-[96vh] h-[calc(96vh-120px)] w-full p-5 bg-gray-100 dark:border-2 dark:border-gray-800 dark:bg-gray-900 rounded-lg`}>
                 <div className="flex justify-between items-center mb-6 border-b border-gray-300 dark:border-gray-700">
