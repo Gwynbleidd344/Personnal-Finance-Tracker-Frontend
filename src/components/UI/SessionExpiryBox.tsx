@@ -58,7 +58,7 @@ export default function SessionExpiryBox() {
             <h4 className="font-medium text-white">{t("session_expired", "Session expired")}</h4>
             <motion.button
                 type="button"
-                className="w-fit h-fit rounded-lg py-1 px-2 shadow-md bg-white text-gray-800 font-[600]"
+                className="w-fit h-fit rounded-lg py-1 px-2 shadow-md transition bg-white dark:bg-gray-800 dark:text-gray-100  text-gray-800 font-[600]"
                 whileHover={{ scale: 1.05 }}
                 onClick={refreshToken}>{t("refresh", "Refresh")}</motion.button>
         </motion.div>
