@@ -8,6 +8,7 @@ import CurrencySettings from '../components/Settings/CurrencySettings';
 import DeleteData from "../components/Settings/DeleteData.tsx";
 import DeleteAccount from '../components/Settings/DeleteAccount.tsx';
 import { getAccessToken } from '../utils/getCookiesToken.ts';
+import ErrorMessage from '../components/UI/ErrorMessage.tsx';
 
 export default function Settings() {
     const [isChangePasswordOpen, setIsChangePasswordOpen] =
@@ -18,18 +19,29 @@ export default function Settings() {
     const { t } = useTranslation();
     const [userSummary, setUserSummary] = useState<{ email: string, createdAt: string }>({ createdAt: '', email: '' });
     const token = getAccessToken()
+    const [errorMessage, setErrorMessage] = useState<string>('')
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
             mode: 'cors', credentials: 'include',
             headers: { Authorization: `${token}` },
         })
-            .then(async res => setUserSummary(await res.json()))
-            .catch(rej => console.log(rej.message));
+            .then(async res => {
+                if (!res.ok) {
+                    const error = await res.json()
+                    return setErrorMessage?.(error?.error || error?.message || 'Failed to retreive account info')
+                }
+                setUserSummary(await res.json())
+            })
+            .catch(rej => {
+                console.error('Failed to fetch user data', rej)
+                return setErrorMessage?.('Unexpected error')
+            });
     }, []);
 
     return (
         <div className="mx-auto lg:h-[96vh] h-[calc(96vh-120px)] overflow-y-scroll dark:border-2 dark:border-gray-800 rounded-lg bg-gray-100 dark:bg-gray-900 p-8 shadow-md">
+            <ErrorMessage message={errorMessage} onClose={() => setErrorMessage('')} />
             <h1 className="mb-6 border-b border-gray-300 dark:border-gray-700 pb-4 text-3xl font-bold text-gray-800 dark:text-gray-100">
                 {t('settings_title', 'Settings')}
             </h1>
