@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import { getAccessToken } from "../../utils/getCookiesToken";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+const geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export default function AiAdvice() {
     const [incomes, setIncomes] = useState([]);
@@ -62,11 +66,14 @@ export default function AiAdvice() {
                 try {
                     aiResult = await window.apifree.chat(prompt);
                 } catch (err: any) {
-                    if (err.message.includes("429")) {
-                        aiResult = "AI service is busy. Please try again later.";
-                    } else {
-                        aiResult = "Failed to get AI advice.";
-                        console.error("AI Error:", err);
+                    console.warn("apifreellm failed, trying Gemini fallback...", err);
+
+                    try {
+                        const geminiResult = await geminiModel.generateContent(prompt);
+                        aiResult = geminiResult.response.text();
+                    } catch (geminiErr) {
+                        console.error("Gemini fallback also failed:", geminiErr);
+                        aiResult = "Unable to get AI advice right now.";
                     }
                 }
 
@@ -83,7 +90,7 @@ export default function AiAdvice() {
         };
 
         fetchData();
-    }, [token, language]); 
+    }, [token, language]);
 
     return (
         <section className="flex flex-wrap items-end text-gray-800 gap-6 border border-gray-300 dark:border-gray-800 dark:bg-gray-800 dark:text-white rounded-lg px-6 py-4 m-4 mb-0 mx-0">

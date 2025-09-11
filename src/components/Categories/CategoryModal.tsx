@@ -54,7 +54,7 @@ export default function CategoryModal({ isOpen, isCreating, isUpdating, category
                         onClick={(e) => e.stopPropagation()}
                     >
                             <div className="flex items-center justify-between p-5 border-b rounded-t-2xl bg-gray-50 dark:bg-gray-700">
-                            <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-3">
+                            <h3 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center gap-3">
                                 <i className={modalDetails.icon}></i>
                                 {modalDetails.title}
                             </h3>
@@ -103,7 +103,7 @@ export default function CategoryModal({ isOpen, isCreating, isUpdating, category
                                 )}
 
                             </div>
-                            <div className="flex items-center justify-end p-5 space-x-3 border-t border-gray-200 rounded-b-2xl bg-gray-50">
+                            <div className="flex items-center justify-end p-5 space-x-3 border-t border-gray-200 dark:border-gray-900 rounded-b-2xl bg-gray-50 dark:bg-gray-700">
                                 <motion.button type="button" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={onClose} className="font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-white text-gray-600 border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200">
                                     {t('cancel', 'Cancel')}
                                 </motion.button>

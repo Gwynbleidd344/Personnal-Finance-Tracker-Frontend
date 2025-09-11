@@ -1,5 +1,6 @@
 
 import { FaFilter, FaList, FaPlus, FaThLarge } from 'react-icons/fa';
+
 import SearchButton from '../searchButton';
 
 type Props = {
@@ -12,7 +13,6 @@ type Props = {
   isFilterVisible: boolean;
   setIsFilterVisible: (b: boolean) => void;
 };
-
 export default function ExpenseHeader({
   t, view, toggleView, setIsModalOpen, searchTerm, setSearchTerm, isFilterVisible, setIsFilterVisible
 }: Props) {

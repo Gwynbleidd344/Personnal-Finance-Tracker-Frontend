@@ -10,6 +10,7 @@ type Props = {
 
 export default function SearchButton({ value, onChange, placeholder = 'Search', className = '' }: Props) {
   return (
+
     <div className={`flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-1.5 ${className}`}>
       <FaSearch className="text-gray-500" />
       <input

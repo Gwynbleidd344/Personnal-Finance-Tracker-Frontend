@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaList, FaPlus, FaThLarge } from 'react-icons/fa';
+
 import { getAccessToken } from '../../../utils/getCookiesToken';
 import SessionExpiryBox from '../../UI/SessionExpiryBox';
 import SearchButton from '../searchButton';
@@ -351,4 +352,4 @@ export default function Income() {
             </AnimatePresence>
         </div>
     );
-}
+    }

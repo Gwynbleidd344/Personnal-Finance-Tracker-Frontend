@@ -7,8 +7,8 @@ import ExpenseHeader from './ExpenseHeader';
 import ExpenseList from './ExpenseList';
 import ExpenseModal from './ExpenseModal';
 import useExpenseData from './hooks/useExpenseData';
-
 import useExpenseActions from './hooks/useExpenseActions';
+import ErrorMessage from '../../UI/ErrorMessage';
 
 type ChartOptions = {
     start: Date;
@@ -32,6 +32,8 @@ export default function Expense(): React.ReactElement {
     const [typeValue, setTypeValue] = useState<'one-time' | 'recurring'>(
         'one-time',
     );
+
+    const [errorMessage, setErrorMessage] = useState<string>('')
     const [chartOptions, setChartOptions] = useState<ChartOptions>({
         start: new Date(new Date().setFullYear(new Date().getFullYear(), 0, 1)),
         end: new Date(
@@ -63,6 +65,7 @@ export default function Expense(): React.ReactElement {
         setIsModalOpen,
         setEditingId,
         setIsConfirmModalOpen,
+        setErrorMessage,
         t: t as any,
     });
 
@@ -107,6 +110,8 @@ export default function Expense(): React.ReactElement {
 
     return (
         <div className="z-50 flex h-[calc(96vh-120px)] w-full flex-col items-center rounded-lg bg-gray-100 lg:h-[96vh] dark:border-2 dark:border-gray-800 dark:bg-gray-900">
+
+            <ErrorMessage message={errorMessage} onClose={() => setErrorMessage('')} />
             <div className="flex min-h-full w-full flex-col rounded-2xl">
                 <ExpenseHeader
                     t={t}
@@ -128,6 +133,7 @@ export default function Expense(): React.ReactElement {
                         categoryList={categoryList}
                     />
                 </div>
+
                 {view === 'list' && (
                     <div className="mx-5 hidden grid-cols-12 items-center gap-2 rounded-sm border border-gray-300 px-4 py-2.5 font-semibold text-gray-600 md:grid md:pl-12 dark:border-gray-700 dark:text-gray-300">
                         <div className="col-span-3 pl-5">Name</div>
@@ -139,7 +145,6 @@ export default function Expense(): React.ReactElement {
                         </div>
                     </div>
                 )}
-
                 <ExpenseList
                     transactions={filteredTransactions}
                     view={view}
