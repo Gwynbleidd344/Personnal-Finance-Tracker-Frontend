@@ -70,7 +70,7 @@ export default function SessionExpiryBox() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.2 }}
-            className="z-100 text-[15px] fixed bottom-5 right-5 p-1.5 pl-3 shadow-md rounded-xl flex items-center justify-between w-fit max-w-[250px] gap-2  bg-red-600 h-fit">
+            className="z-1000 text-[15px] fixed bottom-5 right-5 p-1.5 pl-3 shadow-md rounded-xl flex items-center justify-between w-fit max-w-[250px] gap-2  bg-red-600 h-fit">
             <h4 className="font-medium text-white">{t("session_expired", "Session expired")}</h4>
             <motion.button
                 type="button"

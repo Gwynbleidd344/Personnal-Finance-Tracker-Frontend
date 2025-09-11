@@ -6,7 +6,6 @@ import { FaList, FaPlus, FaThLarge } from 'react-icons/fa';
 import TransactionCard from '../TransactionCard';
 import { getAccessToken } from '../../../utils/getCookiesToken';
 import SearchButton from '../SearchButton';
-import SessionExpiryBox from '../../UI/SessionExpiryBox';
 import type { Transaction } from '../Types';
 
 type ActionsModel = { status: boolean; isDeleting: boolean; };
@@ -114,7 +113,7 @@ export default function Income() {
         <AnimatePresence>
           <motion.div layout className={`mt-2 w-full overflow-y-auto px-4 pt-3 ${view === 'grid' ? 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3' : 'flex flex-col space-y-4'}`} style={{ maxHeight: 'calc(100vh - 220px)' }}>
             {filteredTransactions.map((t) => (
-              <motion.div key={t.id} layout initial={{ scale:0, opacity:0 }} animate={{ scale:1, opacity:1 }} exit={{ scale:0.1, opacity:0 }} transition={{ duration:0.25 }} className="relative">
+              <motion.div key={t.id} layout initial={{ translateY: 10, opacity:0 }} animate={{ translateY: 0, opacity:1 }} exit={{ scale:0.1, opacity:0 }} transition={{ duration:0.2 }} className="relative">
                 <TransactionCard transaction={t} view={view} actions={{
                   onChange() { isModifying.current = { status:true, isDeleting:false }; cardIdRef.current = t.id; openModal(); },
                   onDelete() { isModifying.current = { status:true, isDeleting:true }; cardIdRef.current = t.id; openModal(); }

@@ -31,7 +31,10 @@ export default function ExpenseModal({
             <option value="">{t('select_category', 'Select Category')}</option>
             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
-          <input name="receipt" type="file" className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5" />
+          <div className='grid grid-cols-4 gap-2'>
+            <input id="receipt_file_input_field" name="receipt" type="file" className="rounded-lg border border-gray-300 p-3 max-sm:p-1.5 col-span-3" />
+            <button onClick={() => (document.getElementById("receipt_file_input_field") as HTMLInputElement).value = ''} type='button' className='bg-gray-100 dark:text-black rounded-lg'>Clear</button>
+          </div>
           <div className="flex space-x-4">
             <label className="flex items-center space-x-2"><input type="radio" name="type" value="one-time" checked={typeValue === 'one-time'} onChange={() => setTypeValue('one-time')} /><span>{t('one_time', 'One-time')}</span></label>
             <label className="flex items-center space-x-2"><input type="radio" name="type" value="recurring" checked={typeValue === 'recurring'} onChange={() => setTypeValue('recurring')} /><span>{t('recurring', 'Recurring')}</span></label>

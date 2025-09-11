@@ -26,10 +26,10 @@ const ExpenseList: FC<Props> = ({ transactions, view, actions }) => {
           <motion.div
             key={tx.id}
             layout
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            initial={{ translateY: 10, opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
             exit={{ scale: 0.1, opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.2 }}
           >
             <TransactionCard
               key={tx.id}
