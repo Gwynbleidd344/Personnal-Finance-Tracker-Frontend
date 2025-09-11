@@ -1,59 +1,54 @@
+// src/components/expense/hooks/useExpenseActions.ts
 import type { Dispatch, SetStateAction } from 'react';
 import { getAccessToken } from '../../../../utils/getCookiesToken';
-import type { Transaction } from '../../Types';
+import type { Category, Transaction } from '../../Types';
+import { fetchCategories, fetchExpenses }from '../../../../utils/fetch/Fetch';
 
 type Params = {
     setTransactions: Dispatch<SetStateAction<Transaction[]>>;
+    setCategories: Dispatch<SetStateAction<Category[]>>;
+    setCategoryList: Dispatch<SetStateAction<{ name: string }[]>>;
     setIsModalOpen?: (b: boolean) => void;
     setEditingId?: (id: string | null) => void;
     setIsConfirmModalOpen?: (b: boolean) => void;
+    t: (key: string, fallback?: string) => string;
 };
 
 export default function useExpenseActions({
     setTransactions,
+    setCategories,
+    setCategoryList,
     setIsModalOpen,
     setEditingId,
     setIsConfirmModalOpen,
+    t,
 }: Params) {
     const token = getAccessToken();
     const base = import.meta.env.VITE_API_URL;
 
-    
-    const mapItem = (item: any): Transaction => ({
-        id: String(item.id),
-        name: item.description ?? item.name ?? '',
-        amount: Number(item.amount) || 0,
-        date: item.expense_date ?? item.date ?? '',
-        type: 'expense',
-        start_date: item.start_date ?? item.startDate ?? null,
-        end_date: item.end_date ?? item.endDate ?? null,
-        receipt_id: item.receipt_id ?? item.receiptId ?? null,
-        is_recurrent: Boolean(item.is_recurrent ?? item.isRecurrent),
-        category:
-            typeof item.category === 'string'
-                ? item.category
-                : (item.category?.name ?? item.category_name ?? undefined),
-        source: item.source ?? undefined,
-    });
 
-  
-    const fetchAll = async () => {
+    const fetchAllTransactions = async () => {
         if (!token) return;
         try {
-            const res = await fetch(`${base}/api/expenses`, {
-                credentials: 'include',
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (!res.ok) return;
-            const data = await res.json();
-            const list = Array.isArray(data) ? data.map(mapItem) : [];
-            setTransactions(list);
+            await fetchExpenses(token, setTransactions, t);
         } catch (err) {
-            console.error('fetchAll error', err);
+            console.error('fetchAllTransactions error', err);
         }
     };
 
-  
+    const fetchAllCategories = async () => {
+        if (!token) return;
+        try {
+            await fetchCategories(token, setCategories, setCategoryList);
+        } catch (err) {
+            console.error('fetchAllCategories error', err);
+        }
+    };
+
+    const refreshAll = async () => {
+        await Promise.all([fetchAllTransactions(), fetchAllCategories()]);
+    };
+
     const handleAddTransaction = async (
         e: React.FormEvent<HTMLFormElement>,
     ) => {
@@ -64,30 +59,34 @@ export default function useExpenseActions({
 
         try {
             const res = await fetch(`${base}/api/expenses`, {
-                method: 'POST',
+                mode: 'cors',
                 credentials: 'include',
-                headers: { Authorization: `Bearer ${token}` },
+                method: 'POST',
+                headers: { Authorization: `${token}` }, 
                 body: fd,
             });
+
             if (!res.ok) {
                 const text = await res.text().catch(() => '');
                 console.error('add failed', res.status, text);
                 return;
             }
-            await fetchAll();
+
+            await refreshAll();
             setIsModalOpen?.(false);
             form.reset();
         } catch (err) {
             console.error('handleAddTransaction error', err);
         }
     };
-    
+
     const handleUpdateTransaction = async (
         e: React.FormEvent<HTMLFormElement> | undefined,
         id?: string,
     ) => {
         if (!token) return;
         if (!e && !id) return;
+
         if (e) {
             e.preventDefault();
             const form = e.currentTarget;
@@ -97,9 +96,10 @@ export default function useExpenseActions({
 
             try {
                 const res = await fetch(`${base}/api/expenses/${txId}`, {
-                    method: 'PUT',
+                    mode: 'cors',
                     credentials: 'include',
-                    headers: { Authorization: `Bearer ${token}` },
+                    method: 'PUT',
+                    headers: { Authorization: `${token}` },
                     body: fd,
                 });
                 if (!res.ok) {
@@ -107,7 +107,7 @@ export default function useExpenseActions({
                     console.error('update failed', res.status, text);
                     return;
                 }
-                await fetchAll();
+                await refreshAll();
                 setIsModalOpen?.(false);
                 setEditingId?.(null);
                 form.reset();
@@ -115,19 +115,19 @@ export default function useExpenseActions({
                 console.error('handleUpdateTransaction error', err);
             }
         } else {
-            
             try {
                 const res = await fetch(`${base}/api/expenses/${id}`, {
-                    method: 'PUT',
+                    mode: 'cors',
                     credentials: 'include',
+                    method: 'PUT',
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `${token}`,
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({}),
                 });
                 if (!res.ok) return;
-                await fetchAll();
+                await refreshAll();
                 setIsModalOpen?.(false);
                 setEditingId?.(null);
             } catch (err) {
@@ -136,7 +136,28 @@ export default function useExpenseActions({
         }
     };
 
-    
+    const handleDeleteTransaction = async (id: string) => {
+        if (!token) return;
+        try {
+            const res = await fetch(`${base}/api/expenses/${id}`, {
+                mode: 'cors',
+                credentials: 'include',
+                method: 'DELETE',
+                headers: { Authorization: `${token}` },
+            });
+            if (!res.ok) {
+                const text = await res.text().catch(() => '');
+                console.error('delete failed', res.status, text);
+                return;
+            }
+            await refreshAll();
+            setIsConfirmModalOpen?.(false);
+            setEditingId?.(null);
+        } catch (err) {
+            console.error('delete error', err);
+        }
+    };
+
     const handleChangeTransaction = (id: string) => {
         setEditingId?.(id);
         setIsModalOpen?.(true);
@@ -145,32 +166,19 @@ export default function useExpenseActions({
     const handleDownloadReceipt = async (id: string) => {
         if (!token) return;
         try {
-            const res = await fetch(`${base}/api/expenses/${id}/receipt`, {
+            const res = await fetch(`${base}/api/receipts/${id}`, {
+                mode: 'cors',
                 credentials: 'include',
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { Authorization: `${token}` },
             });
-            if (!res.ok) {
-                const res2 = await fetch(`${base}/api/receipts/${id}`, {
-                    credentials: 'include',
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                if (!res2.ok) return;
-                const blob2 = await res2.blob();
-                const url2 = URL.createObjectURL(blob2);
-                const a2 = document.createElement('a');
-                a2.href = url2;
-                a2.download = `receipt_${id}`;
-                document.body.appendChild(a2);
-                a2.click();
-                a2.remove();
-                URL.revokeObjectURL(url2);
-                return;
-            }
+            if (!res.ok) return;
             const blob = await res.blob();
+            const filename = `${id}.${res.headers.get('content-type')?.split('/')[1] ?? 'bin'}`;
+
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `receipt_${id}`;
+            a.download = filename;
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -180,26 +188,10 @@ export default function useExpenseActions({
         }
     };
 
-    
-    const handleDeleteTransaction = async (id: string) => {
-        if (!token) return;
-        try {
-            const res = await fetch(`${base}/api/expenses/${id}`, {
-                method: 'DELETE',
-                credentials: 'include',
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (!res.ok) return;
-            await fetchAll();
-            setIsConfirmModalOpen?.(false);
-            setEditingId?.(null);
-        } catch (err) {
-            console.error('delete error', err);
-        }
-    };
-
     return {
-        fetchAll,
+        refreshAll,
+        fetchAllTransactions,
+        fetchAllCategories,
         handleAddTransaction,
         handleUpdateTransaction,
         handleChangeTransaction,

@@ -13,11 +13,7 @@ export default function useExpenseData(t: (key: string, fallback?: string) => st
     const load = async () => {
       if (!token) return;
       try {
-        // fetchCategories signature: (token, setCategories, setCategoryList)
-        // It will call setCategories with Category[] and setCategoryList with {name:string}[]
         await fetchCategories(token, setCategories, setCategoryList);
-
-        // fetchExpenses signature: (token, setTransactions, t)
         await fetchExpenses(token, setTransactions, t);
       } catch (err) {
         console.error('[useExpenseData] load error', err);
@@ -28,8 +24,14 @@ export default function useExpenseData(t: (key: string, fallback?: string) => st
     };
 
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, t]);
+  }, [token]); 
 
-  return { categoryList, transactions, setTransactions, categories, setCategories };
+  return {
+    categoryList,
+    transactions,
+    setTransactions,
+    categories,
+    setCategories,
+    setCategoryList,
+  };
 }
