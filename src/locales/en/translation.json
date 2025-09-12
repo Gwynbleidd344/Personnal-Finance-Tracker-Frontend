@@ -113,5 +113,7 @@
     "refresh_error_with_token": "Failed to refresh. Logging out",
     "refresh_error_no_token": "No refresh token. Logging out",
     "session_expired": "Session expired",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "show": "Show",
+    "hide": "Hide"
 }

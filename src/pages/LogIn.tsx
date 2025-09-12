@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 
 import googleLogo from '../assets/Google.png';
-import { FaUser, FaLock } from 'react-icons/fa';
+import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import ErrorMessage from '../components/UI/ErrorMessage.tsx';
 import LoadingSpinner from '../components/UI/LoadingSpinner.tsx';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,7 @@ export default function LogIn() {
     const { t } = useTranslation();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const [rememberMe, setRememberMe] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -147,7 +148,7 @@ export default function LogIn() {
                                 <input
                                     id="password"
                                     name="password"
-                                    type="password"
+                                    type={showPassword ? 'text' : 'password'}
                                     autoComplete="current-password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
@@ -155,6 +156,15 @@ export default function LogIn() {
                                     className="block w-full appearance-none rounded-md border border-gray-300 px-10 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none sm:text-sm"
                                     placeholder={t('password_placeholder', '••••••••')}
                                 />
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="text-gray-600 hover:text-gray-800"
+                                    >
+                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div className="flex items-center justify-between">

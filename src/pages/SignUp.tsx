@@ -4,17 +4,26 @@ import { Link, useNavigate } from 'react-router-dom';
 import ErrorMessage from '../components/UI/ErrorMessage.tsx';
 import LoadingSpinner from '../components/UI/LoadingSpinner.tsx';
 import { useTranslation } from 'react-i18next';
+
 export default function SignUp() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [username, setUsername] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
     const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (password !== confirmPassword) {
+            setError('Les mots de passe ne correspondent pas.');
+            return;
+        }
+
         setLoading(true);
         localStorage.setItem('username', username);
         console.log(localStorage.getItem('username'));
@@ -35,6 +44,7 @@ export default function SignUp() {
             if (res.status === 201) {
                 setEmail('');
                 setPassword('');
+                setConfirmPassword('');
                 setError('');
                 navigate('/login');
             } else {
@@ -117,17 +127,26 @@ export default function SignUp() {
                             </div>
                         </div>
                         <div>
-                            <label
-                                htmlFor="password"
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                {t('password_label', 'Password')}
-                            </label>
+                            <div className="flex items-center justify-between">
+                                <label
+                                    htmlFor="password"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    {t('password_label', 'Password')}
+                                </label>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                                >
+                                    {showPassword ? t('hide', 'Hide') : t('show', 'Show')}
+                                </button>
+                            </div>
                             <div className="mt-1">
                                 <input
                                     id="password"
                                     name="password"
-                                    type="password"
+                                    type={showPassword ? 'text' : 'password'}
                                     autoComplete="new-password"
                                     value={password}
                                     onChange={(e) =>
@@ -150,8 +169,10 @@ export default function SignUp() {
                                 <input
                                     id="confirm-password"
                                     name="confirm-password"
-                                    type="password"
+                                    type={showPassword ? 'text' : 'password'}
                                     autoComplete="new-password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
                                     required
                                     className="block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                     placeholder={t('password_placeholder', '••••••••')}

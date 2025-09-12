@@ -113,5 +113,7 @@
     "refresh_error_with_token": "Impossible de rafraîchir. Déconnexion",
     "refresh_error_no_token": "Token manquant. Déconnexion",
     "session_expired": "Session éxpirée",
-    "refresh": "Rafraîchir"
+    "refresh": "Rafraîchir",
+    "show": "Afficher",
+    "hide": "Masquer"
 }
